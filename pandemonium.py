@@ -125,5 +125,5 @@ if __name__ == "__main__":
     #rename.manager('recursive', '', '%artist% - %title%')
     #extract.copy('F:\\', 'genre', 'Post-Rock')
     ##write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
-    
+    #test
     print (time.ctime())

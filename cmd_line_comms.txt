@@ -1,0 +1,13 @@
+﻿extract:
+python pandemonium.py -p e:\Test -o c:\Copied -g genre -c Post-Metal -t
+
+export: - пока не совсем работает, но данный пример работает
+python pandemonium.py -p e:\Music\Test -o E:\ -m single -f xml -e
+
+tag_writer:
+python pandemonium.py -p e:\Test\Test -m rec -g artist -s blaa!!! -w
+
+renamer:
+python pandemonium.py -p e:\Test\Test -m recursive -n %track%-%artist%-%title% -r
+
+

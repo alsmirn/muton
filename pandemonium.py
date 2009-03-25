@@ -109,7 +109,7 @@ if __name__ == "__main__":
     """
 
     scanner = collection.MediaScanner()
-    c = scanner.scan(u"e:\\Music\\Test")
+    c = scanner.scan(u"e:\\Test")
 #    for path, v in c.items():
 #        print path, v
         
@@ -120,10 +120,9 @@ if __name__ == "__main__":
     
     cmd(sys.argv[1:])
 
-    wr_output.write(u'E:\\My Documents\\', 'album', 'xml')
+    wr_output.write(u'E:\\My Documents\\', 'album', 'csv')
     #scan_albums.scan()
     #rename.manager('recursive', '', '%artist% - %title%')
     #extract.copy('F:\\', 'genre', 'Post-Rock')
     ##write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
-    #test
     print (time.ctime())

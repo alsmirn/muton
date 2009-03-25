@@ -37,26 +37,25 @@ class ScannedInfoWriter():
         mark = [] #List of albums for checking of uniqueness
         f = codecs.open(output_csv, encoding='utf-16le', mode='w+')
         f.write('"Artist";"Album";"Year";"Genre";"Bitrate";"Format";"Size";"Comment"' + '\n')
-        
         for path, v in self.collection.items():
             try:
                 if str(v['bitrate']) not in self._bitrate_samples:
                     v['bitrate'] = 'VBR ' + str(v['bitrate'])
-                    if output_mode == 'album':
-                        if v['album'] not in mark:
-                            str_to_write = 8 * '"%s";' % \
-                            (v['artist'], v['album'], 
-                             v['year'][0:4], v['genre'], v['bitrate'], 
-                             v['format'], self._alb_size_dict[v['album']][0],
-                             escape(v['comment'])) 
-                            f.write(str_to_write.decode('utf-8') + '\n')
-                            mark.append(v['album'])
-                    else:
-                        str_to_write = (6 * '"%s";' + '%4.2f' + ';' + '"%s";' + '\n') % \
-                        (v['artist'], v['album'], v['year'][0:4],
-                         v['genre'], v['bitrate'], v['format'],
-                         (float(os.path.getsize(path))/1048576), v['comment'])
-                        f.write(str_to_write.decode('utf-8'))
+                if output_mode == 'album':
+                    if v['album'] not in mark:
+                        str_to_write = 8 * '"%s";' % \
+                        (v['artist'], v['album'], 
+                         v['year'][0:4], v['genre'], v['bitrate'], 
+                         v['format'], self._alb_size_dict[v['album']][0],
+                         v['comment']) 
+                        f.write(str_to_write.decode('utf-8') + '\n')
+                        mark.append(v['album'])
+                else:
+                    str_to_write = (6 * '"%s";' + '%4.2f' + ';' + '"%s";' + '\n') % \
+                    (v['artist'], v['album'], v['year'][0:4],
+                     v['genre'], v['bitrate'], v['format'],
+                     (float(os.path.getsize(path))/1048576), v['comment'])
+                    f.write(str_to_write.decode('utf-8'))
             except TypeError:
                 print "%r is not a valid audio file" % (path, )
                 return            

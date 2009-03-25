@@ -31,8 +31,6 @@ class MediaScanner():
         
         """
         
-        ext_list = '.mp3', '.flac', '.ape', '.ogg'
-        
         file_list = os.listdir(path)
  
         #Scanning the whole contents of the folder 
@@ -51,16 +49,16 @@ class MediaScanner():
             self.scan_fs(subdir)
 
     def read_tags(self):
-		ext_list = '.mp3', '.flac', '.ape', '.ogg'
-		
-        #Creating a dictionary with path as key and tags as value			
-		for path in in self._paths:
+        ext_list = '.mp3', '.flac', '.ape', '.ogg'  
+        
+        #Creating a dictionary with path as key and tags as value
+        for path in self._paths:
             lower_path = path.lower()
-			for ext in ext_list:
-				if re.search('\' + ext + '$', lower_path):
-					self.tag_info[path] = self.read_mp3_tag(path)
-					continue            
-                
+            for ext in ext_list:
+                if re.search('\\' + ext + '$', lower_path):
+                    self.tag_info[path] = self.read_mp3_tag(path)
+                    continue
+
     def read_mp3_tag(self, path):
         """
         Returns mp3 tag info.

@@ -54,10 +54,18 @@ class MediaScanner():
         #Creating a dictionary with path as key and tags as value
         for path in self._paths:
             lower_path = path.lower()
-            for ext in ext_list:
-                if re.search('\\' + ext + '$', lower_path):
-                    self.tag_info[path] = self.read_mp3_tag(path)
-                    continue
+#            for ext in ext_list:
+#                if re.search('\\' + ext + '$', lower_path):
+#                    self.tag_info[path] = self.read_mp3_tag(path)
+#                    continue
+            if re.search('\.mp3' + '$', lower_path):
+                self.tag_info[path] = self.read_mp3_tag(path)
+            if re.search('\.flac' + '$', lower_path):
+                self.tag_info[path] = self.read_flac_tag(path)
+            if re.search('\.ape' + '$', lower_path):
+                self.tag_info[path] = self.read_ape_tag(path)
+            if re.search('\.ogg' + '$', lower_path):
+                self.tag_info[path] = self.read_ogg_tag(path)
 
     def read_mp3_tag(self, path):
         """

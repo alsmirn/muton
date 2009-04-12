@@ -3,13 +3,12 @@ import mutagen
 from mutagen.flac import FLAC
 from mutagen.apev2 import APEv2
 from mutagen.oggvorbis import OggVorbis
-from mutagen.id3 import ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TCOP 
-from mutagen.id3 import TPOS, TEXT, TENC, TSRC, TBPM, TPE3, TPUB, TMOO, TOPE
-from mutagen.id3 import TOLY, TOAL, TOFN, TORY, TOWN, TPE2, TPE4, TPRO, TRSN
-from mutagen.id3 import TRSO, TSIZ, TSOA, TSOP, TSOT, TSSE, TSST, TRDA, TFLT
-from mutagen.id3 import TIME, TIT1, TIT3, TKEY, TLAN, TLEN, TMED, TCMP, TDAT
-from mutagen.id3 import TDEN, TDOR, TDLY, TDRL, TDTG, TYER
-
+from mutagen.id3 import ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TCOP, \
+                        TPOS, TEXT, TENC, TSRC, TBPM, TPE3, TPUB, TMOO, TOPE, \
+                        TOLY, TOAL, TOFN, TORY, TOWN, TPE2, TPE4, TPRO, TRSN, \
+                        TRSO, TSIZ, TSOA, TSOP, TSOT, TSSE, TSST, TRDA, TFLT, \
+                        TIME, TIT1, TIT3, TKEY, TLAN, TLEN, TMED, TCMP, TDAT, \
+                        TDEN, TDOR, TDLY, TDRL, TDTG, TYER
 
 class TagWriteManager():
     
@@ -391,3 +390,4 @@ class OGGTagWriter():
             return
         ogg_audio[tag_type] = input_string
         ogg_audio.save()
+        

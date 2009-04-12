@@ -45,11 +45,12 @@ class Renamer():
         if track_n != '' and len(track_n) <= 1:
             track_n = '0' + track_n
         
-        tag_items = {'artist':key['artist'],
-            'album':key['album'],
-            'year':key['year'], 
-            'genre':key['genre'], 
-            'title':key['title'], 'track':track_n}
+        tag_items = {'artist': key['artist'],
+            'album': key['album'],
+            'year': key['year'], 
+            'genre': key['genre'], 
+            'title': key['title'], 
+            'track': track_n}
     
         s = pattern.split('%')
         #Replacing list's items by tag info

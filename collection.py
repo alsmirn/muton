@@ -28,7 +28,6 @@ class MediaScanner():
         Make list of all files in dirpath
         
         @param dirpath: input dirpath
-        
         """
         
         file_list = os.listdir(path)

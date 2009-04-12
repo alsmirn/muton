@@ -54,8 +54,8 @@ class MediaScanner():
         #Creating a dictionary with path as key and tags as value
         for path in self._paths:
             lower_path = path.lower()
-##It would be great to execute in this way, but I don't know how to construct
-##names of methods dynamically            
+            ##It would be great to execute in this way, but I don't know how
+            ##to construct methods names dynamically            
 #            for ext in ext_list:
 #                if re.search('\\' + ext + '$', lower_path):
 #                    self.tag_info[path] = self.read_mp3_tag(path)

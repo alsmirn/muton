@@ -125,7 +125,7 @@ class TagWriteManager():
                 mp3_tagWriter.mp3_write_trk(path, input_string)                    
             elif tag_type == 'tag_time':
                 mp3_tagWriter.mp3_write_trk(path, input_string)                    
-        """Executing method for writing flac tags"""                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        """Executing method for writing flac tags"""             
         if re.search('\.flac' + '$', lower_path):
             flac_tagWriter = FLACTagWriter()
             flac_tagWriter.flac_write_tags(path, tag_type, input_string)
@@ -141,6 +141,8 @@ class TagWriteManager():
                         
 class MP3TagWriter():
     """Writes tags to mp3 files"""
+    
+    #@warning: can't write tags if tag is absent completely. Need to solve it.
     
     def __init__(self, path):
         self.path = path

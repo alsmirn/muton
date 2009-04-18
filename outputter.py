@@ -11,6 +11,8 @@ class ScannedInfoWriter():
         self._bitrate_samples = ['', '128', '160', '192', '256', '320']
         
     def scan_alb_size(self):
+        """"Counts size of each album - for each tag type 'album' """
+        
         alb_list = [] #List of albums
         for path, v in self.collection.items():
             if v['album'] not in alb_list:
@@ -62,9 +64,8 @@ class ScannedInfoWriter():
         f.close()
     
     def make_XML(self, output_mode, output_xml):
-        """Returns XML with all albums info."""
-        
-        #prepare output XML file              
+        """Returns XML with all pattern info (for example - album info)."""
+                    
         self._fx = open(output_xml, "w")
         self._fx.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         self._fx.write("<MediaInfo>\n")

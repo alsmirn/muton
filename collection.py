@@ -93,50 +93,10 @@ class MediaScanner():
         if 'TDRC' in mp3_audio: media_info.year = str(mp3_audio['TDRC'])   
         if 'TCON' in mp3_audio: media_info.genre = str(mp3_audio['TCON']) 
         if 'TRCK' in mp3_audio: media_info.track = str(mp3_audio['TRCK'])       
-        if 'TCOP' in mp3_audio: media_info.copyright = str(mp3_audio['TCOP'])
         if 'TPOS' in mp3_audio: media_info.disc_number = str(mp3_audio['TPOS'])
-        if 'TENC' in mp3_audio: media_info.encoder = str(mp3_audio['TENC'])
-        if 'TEXT' in mp3_audio: media_info.lyricist = str(mp3_audio['TEXT'])
-        if 'TSRC' in mp3_audio: media_info.isrc = str(mp3_audio['TSRC'])
-        if 'TBPM' in mp3_audio: media_info.bpm = str(mp3_audio['TBPM'])
-        if 'TPE3' in mp3_audio: media_info.conductor = str(mp3_audio['TPE3'])
         if 'TPUB' in mp3_audio: media_info.publisher = str(mp3_audio['TPUB'])
-        if 'TMOO' in mp3_audio: media_info.mood = str(mp3_audio['TMOO'])
-        if 'TOPE' in mp3_audio: media_info.orig_artist = str(mp3_audio['TOPE'])
-        if 'TOLY' in mp3_audio: media_info.orig_lyricist = str(mp3_audio['TOLY'])
-        if 'TOAL' in mp3_audio: media_info.orig_album = str(mp3_audio['TOAL'])
-        if 'TOFN' in mp3_audio: media_info.orig_f_name = str(mp3_audio['TOFN'])
-        if 'TORY' in mp3_audio: media_info.orig_rel_year = str(mp3_audio['TORY'])
-        if 'TOWN' in mp3_audio: media_info.owner = str(mp3_audio['TOWN'])
-        if 'TPE2' in mp3_audio: media_info.accomp = str(mp3_audio['TPE2'])
-        if 'TPE4' in mp3_audio: media_info.remixer = str(mp3_audio['TPE4'])
-        if 'TPRO' in mp3_audio: media_info.produced = str(mp3_audio['TPRO'])
-        if 'TRSN' in mp3_audio: media_info.radiost_name = str(mp3_audio['TRSN'])
-        if 'TRSO' in mp3_audio: media_info.radiost_owner = str(mp3_audio['TRSO'])
-        if 'TSIZ' in mp3_audio: media_info.size = str(mp3_audio['TSIZ'])
-        if 'TSOA' in mp3_audio: media_info.alb_sort_ord_key = str(mp3_audio['TSOA'])
-        if 'TSOP' in mp3_audio: media_info.perf_sort_ord_key = str(mp3_audio['TSOP'])
-        if 'TSOT' in mp3_audio: media_info.title_sort_ord_key = str(mp3_audio['TSOT'])
-        if 'TSSE' in mp3_audio: media_info.enc_settings = str(mp3_audio['TSSE'])
-        if 'TSST' in mp3_audio: media_info.set_subtitle = str(mp3_audio['TSST'])
-        if 'TYER' in mp3_audio: media_info.rec_year = str(mp3_audio['TYER'])
-        if 'TYER' in mp3_audio: media_info.rec_dates = str(mp3_audio['TYER'])
-        if 'TFLT' in mp3_audio: media_info.f_type = str(mp3_audio['TFLT'])
-        if 'TIME' in mp3_audio: media_info.rec_time = str(mp3_audio['TIME'])
-        if 'TIT1' in mp3_audio: media_info.cont_gr_desc = str(mp3_audio['TIT1'])
-        if 'TIT3' in mp3_audio: media_info.subt_desc = str(mp3_audio['TIT3'])
-        if 'TKEY' in mp3_audio: media_info.start_key = str(mp3_audio['TKEY'])
-        if 'TLAN' in mp3_audio: media_info.lang = str(mp3_audio['TLAN']) 
-        if 'TLEN' in mp3_audio: media_info.tag_length = str(mp3_audio['TLEN'])
-        if 'TMED' in mp3_audio: media_info.media_type = str(mp3_audio['TMED'])
-        if 'TCMP' in mp3_audio: media_info.iTunes_comp_flag = str(mp3_audio['TCMP'])
-        if 'TDAT' in mp3_audio: media_info.date_of_rec = str(mp3_audio['TDAT'])
-        if 'TDEN' in mp3_audio: media_info.enc_time = str(mp3_audio['TDEN'])
-        if 'TDOR' in mp3_audio: media_info.orig_rel_time = str(mp3_audio['TDOR'])
-        if 'TDLY' in mp3_audio: media_info.audio_delay = str(mp3_audio['TDLY'])
-        if 'TDRL' in mp3_audio: media_info.rel_time = str(mp3_audio['TDRL'])
-        if 'TDTG' in mp3_audio: media_info.tag_time = str(mp3_audio['TDTG']) 
-        
+        if 'USLT' in mp3_audio: media_info.lyrics = str(mp3_audio['USLT'])
+
         #There can be infinite numbers of comment tags, so we can read any
         bad_comms = "COMM:ID3v1:'eng'"
 
@@ -144,6 +104,11 @@ class MediaScanner():
             if not re.search('iTun', key) and key not in bad_comms \
             and re.match('COMM:', key):
                 media_info.comment = str(mp3_audio[key])
+                
+        #There can be infinite numbers of url tags, so we can read any        
+        for key in mp3_audio.keys():
+            if re.match('WXXX:', key):
+                media_info.url = str(mp3_audio[key])
                 
         media_info.format = 'mp3'
         media_info.bitrate = mp3_audio.info.bitrate/1000

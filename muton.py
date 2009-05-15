@@ -19,7 +19,11 @@ def main():
     rename = renamer.Renamer(c)
     
     pattern = '%track% - %artist% - %title%'
-   
+
+    """
+    I WANT TO KNOW,
+    what each command have to do...
+    """
     argv = sys.argv[1:]
     try:                                
         opts, args = getopt.getopt(argv, 'tewrp:o:n:s:m:f:g:c:', ['extr', \
@@ -59,7 +63,7 @@ def main():
             rename = renamer.Renamer(c)
             rename.manager(mode, '', pattern)
                        
-    wr_output.write(u'information_chris_goes_rock', 'album', 'csv')
+    wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
     
     #scan_albums.scan()
     #rename.manager('recursive', '', '%artist% - %title%')

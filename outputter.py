@@ -15,13 +15,18 @@ class ScannedInfoWriter():
         
         alb_list = [] #List of albums
         for path, v in self.collection.items():
-            if v['album'] not in alb_list:
-                alb_list.append(v['album'])
+            try:
+                if v['album'] not in alb_list:
+                    alb_list.append(v['album'])
+            except TypeError, msg:
+                print msg
+                print v
+                
         for alb in alb_list:
             alb_size = 0
             for path, v in self.collection.items():
                 if v['album'] == alb:
-                    alb_size += float(os.path.getsize(path))/1048576
+                    alb_size += float(os.path.getsize(path)) / 1048576
                 self._alb_size_dict[alb] = ['%4.2f' % alb_size]
                 
                 

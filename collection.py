@@ -78,9 +78,11 @@ class MediaScanner():
         try:
             mp3_audio = MP3(path) #Reading tags
         except mutagen.mp3.HeaderNotFoundError:
+            media_info.album = str()
+            media_info.bitrate = int()
             media_info.tag_error = 'No MP3 tag found or %r is not a valid MP3 file' \
             % (path.encode(sys.stdout.encoding or "utf-8"), )
-            return media_info.tag_error
+            return media_info
         
         #Initializing only those tags that are used in outputter
         media_info.artist = media_info.title = media_info.album = \

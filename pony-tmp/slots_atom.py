@@ -4,8 +4,7 @@ Some experiments.
 
 """
 
-class MediaFileInfo2():
-    
+class MediaFileInfo2(object):
     __slots__ = ('artist', 'title', 'album', 'year', 'genre', 'track', 
                  'comment', 'bitrate', 'format', 'copyright',
                  'date_of_rec', 'enc_time', 'orig_rel_time', 'audio_delay',
@@ -25,11 +24,11 @@ class MediaFileInfo2():
                  'start_key', 'iTunes_comp_flag', 'set_subtitle',
                  'disc_number', 'label', 'labelno', 'size', 'compilation',
                  'subt_desc', 'channels', 'sample_rate', 'bps', 
-                 'total_samples', 'tag_error', 'rec_dates', '__dict__')
+                 'total_samples', 'tag_error', 'rec_dates')
     
     #for s in __slots__: eval("%s = ''" % (s,))
     #eval("artist = ''")
-    artist = 'a'
+    #artist = 'a'
     
     def __init__(self, *args, **kwargs):
         pass
@@ -37,3 +36,6 @@ class MediaFileInfo2():
 instance = MediaFileInfo2()
 #print dir(instance)
 instance.artist = 'b'
+print instance.artist
+
+instance.z = 22434

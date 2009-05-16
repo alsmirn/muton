@@ -11,15 +11,15 @@ from mutagen.id3 import ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TCOP, \
                         TDEN, TDOR, TDLY, TDRL, TDTG, TYER, USLT, WXXX, APIC
 
 class TagWriteManager():
-    
+
     def __init__(self, collection):
         self.collection = collection
         self._paths = [] # list of file paths
-          
+
     def tag_write_man(self, path, write_mode, tag_type, input_string):
         if write_mode == 'single':
             self.write(path, tag_type, input_string)
-        else: 
+        else:
             self.deepwrite(tag_type, input_string)
 
     def deepwrite(self, tag_type, input_string):
@@ -29,9 +29,9 @@ class TagWriteManager():
     def write(self, path, tag_type, input_string):
         lower_path = path.lower()
         if re.search('\.mp3' + '$', lower_path):
-            """Executing methods for each type of mp3 tag"""    
-            mp3_tagWriter = MP3TagWriter(path)       
-            if tag_type == 'title':                   
+            """Executing methods for each type of mp3 tag"""
+            mp3_tagWriter = MP3TagWriter(path)
+            if tag_type == 'title':
                 mp3_tagWriter.mp3_write_title(path, input_string)
             elif tag_type == 'artist':
                 mp3_tagWriter.mp3_write_artist(path, input_string)
@@ -48,15 +48,15 @@ class TagWriteManager():
             elif tag_type == 'disc_number':
                 mp3_tagWriter.mp3_write_disc_number(path, input_string)
             elif tag_type == 'publisher':
-                mp3_tagWriter.mp3_write_publisher(path, input_string)   
+                mp3_tagWriter.mp3_write_publisher(path, input_string)
             elif tag_type == 'url':
-                mp3_tagWriter.mp3_write_url(path, input_string)                 
+                mp3_tagWriter.mp3_write_url(path, input_string)
             elif tag_type == 'lyrics':
-                mp3_tagWriter.mp3_write_lyrics(path, input_string)  
+                mp3_tagWriter.mp3_write_lyrics(path, input_string)
             elif tag_type == 'picture':
-                mp3_tagWriter.mp3_write_picture(path, input_string)                     
-                 
-        """Executing method for writing flac tags"""             
+                mp3_tagWriter.mp3_write_picture(path, input_string)
+
+        """Executing method for writing flac tags"""
         if re.search('\.flac' + '$', lower_path):
             flac_tagWriter = FLACTagWriter()
             flac_tagWriter.flac_write_tags(path, tag_type, input_string)
@@ -68,49 +68,49 @@ class TagWriteManager():
         if re.search('\.ogg' + '$', lower_path):
             ogg_tagWriter = OGGTagWriter()
             ogg_tagWriter.ogg_write_tags(path, tag_type, input_string)
-                    
-                        
+
+
 class MP3TagWriter():
     """Writes tags to mp3 files"""
-    
+
     #@warning: can't write tags if tag is absent completely. Need to solve it.
-    
+
     def __init__(self, path):
         self.path = path
-        
+
         try:
             self.mp3_audio = ID3(self.path) #Reading tags
         except (mutagen.id3.ID3NoHeaderError, mutagen.mp3.HeaderNotFoundError):
             print "No MP3 tag found or %r is not a valid MP3 file" % (self.path, )
-            return           
+            return
 
     def mp3_write_title(self, path, input_string):
         self.mp3_audio.add(TIT2(encoding=3, text=input_string))
         self.mp3_audio.save()
-        
+
     def mp3_write_artist(self, path, input_string):
         self.mp3_audio.add(TPE1(encoding=3, text=input_string))
-        self.mp3_audio.save()       
-                    
+        self.mp3_audio.save()
+
     def mp3_write_album(self, path, input_string):
         self.mp3_audio.add(TALB(encoding=3, text=input_string))
         self.mp3_audio.save()
-                
+
     def mp3_write_year(self, path, input_string):
         self.mp3_audio.add(TDRC(encoding=3, text=input_string))
-        self.mp3_audio.save()   
-                
+        self.mp3_audio.save()
+
     def mp3_write_genre(self, path, input_string):
         self.mp3_audio.add(TCON(encoding=3, text=input_string))
-        self.mp3_audio.save()          
-        
+        self.mp3_audio.save()
+
     def mp3_write_comment(self, path, input_string):
         self.mp3_audio.add(COM(encoding=3, text=input_string))
-        self.mp3_audio.save() 
-        
+        self.mp3_audio.save()
+
     def mp3_write_trk(self, path, input_string):
         self.mp3_audio.add(TRK(encoding=3, text=input_string))
-        self.mp3_audio.save()                                                                         
+        self.mp3_audio.save()
 
     def mp3_write_disc_number(self, path, input_string):
         self.mp3_audio.add(TPOS(encoding=3, text=input_string))
@@ -123,15 +123,15 @@ class MP3TagWriter():
     def mp3_write_url(self, path, input_string):
         self.mp3_audio.add(WXXX(encoding=3, text=input_string))
         self.mp3_audio.save()
-        
+
     def mp3_write_lyrics(self, path, input_string):
         self.mp3_audio.add(USLT(encoding=3, text=input_string))
         self.mp3_audio.save()
-        
+
     def mp3_write_picture(self, path, input_string):
         self.mp3_audio.add(APIC(encoding=3, mime='-->', type=3, data=input_string))
         self.mp3_audio.save()
-        
+
 
 class FLACTagWriter():
     """Writes tags to FLAC file"""
@@ -161,7 +161,7 @@ class APETagWriter():
 
 class OGGTagWriter():
     """Writes tags to OGG file"""
-    
+
     def ogg_write_tags(self, path, tag_type, input_string):
         try:
             ogg_audio = OggVorbis(path) #Reading tags
@@ -171,4 +171,4 @@ class OGGTagWriter():
             return
         ogg_audio[tag_type] = input_string
         ogg_audio.save()
-        
+

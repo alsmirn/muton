@@ -13,32 +13,74 @@ class Usage(Exception):
     """Usage class ;)
     """
     def __init__(self, msg):
-        self.msg = msg
+        self.msg = \
+    """
+    Command line feature design:
+    
+    python muton.py [COMMANDS] path_to_collection
+    
+    COMMANDS:
 
+    #0 Scan process is running always if in command line specified #1,2 or 3 
+    blocks. This -s option is not obligatory, it uses when you want specifie 
+    musical files format. 
 
-def main(argv=None):
-    """Main function ;)
+    -s                Scan tags in specified format (by default all formats)
+    --format f1,f2,   Adjustment of format (mp3, flac, ape)
+    
+
+    #1 Scan all files and write tags information on standard output (custom).
+
+    -w                Writes all tags to standard output in custom format 
+                      (default format is CSV).
+    -f filename       Means "file", specifies output file
+    --format fmt_name Set format of output ('album', 'atom')
+                      @TODO normal output_mode in outputter module.
+                      
+
+    #2 Scan all files and rename by (custom) template.
+
+    -rn               Rename files by template
+                      (default template is: '%track% - %artist% - %title%').
+    --template "t"    Specifies custom template.
+    
+
+    #3 Scan all files and copy selected by tag files to specified folder.
+
+    -cp tag ad folder Select all files which has ad (admission) in tag and copy 
+                      to specified folder
+                      
+    
+    #4 Manual tags rewriting...
     """
 
+def main(argv=None):
+    """
+    Main function ;)
+    """
+    
     scanner = collection.MediaScanner()
     # Please edit for personal use!
     c = scanner.scan(u"/home/alexey/ChrisGoesRock/")
 
-    write_tags = tag_writer.TagWriteManager(c)
-    extract = copy_pick.FileCopierBySign(c)
+    #write_tags = tag_writer.TagWriteManager(c)
+    #extract = copy_pick.FileCopierBySign(c)
     wr_output = outputter.ScannedInfoWriter(c)
-    rename = renamer.Renamer(c)
+    #rename = renamer.Renamer(c)
+    #pattern = '%track% - %artist% - %title%'
 
-    pattern = '%track% - %artist% - %title%'
+    wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
+
+    #scan_albums.scan()
+    #rename.manager('recursive', '', '%artist% - %title%')
+    #extract.copy('F:\\', 'genre', 'Post-Rock')
+    ##write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
     """
-    I WANT TO KNOW,
-    what each command have to do...
+    Needs rewrite according Usage message
     """
-
     if argv is None:
         argv = sys.argv
-
     try:
         try:
             opts, args = getopt.getopt(argv[1:], 'tewrp:o:n:s:m:f:g:c:',
@@ -92,13 +134,6 @@ def main(argv=None):
         print >>sys.stderr, err.msg
         print >>sys.stderr, "use --help ;)"
         return 2
-
-    wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
-
-    #scan_albums.scan()
-    #rename.manager('recursive', '', '%artist% - %title%')
-    #extract.copy('F:\\', 'genre', 'Post-Rock')
-    ##write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
 if __name__ == "__main__":
 

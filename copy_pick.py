@@ -32,12 +32,11 @@ class FileCopierBySign():
                 # @note: THIS OPERATION YOU CAN DO IN ONE REGULAR EXPR, THINCK!
                 strip_tags = ('artist', 'album')
                 
-                for rs in restr_symbols:
-                    for tag in strip_tags:
+                for tag in strip_tags:
+                    for rs in restr_symbols:
                         v[tag] = re.sub(r'[ ]?%s' % rs, '', v[tag])
 
-                for wdp in win_depr_punct:
-                    for tag in strip_tags:
+                    for wdp in win_depr_punct:
                         v[tag] = v[tag].strip(wdp)
 
                 #Making path for the extraction

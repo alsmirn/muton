@@ -27,20 +27,16 @@ class FileCopierBySign():
 
             if v[info_type].find(search_item) != - 1:
                 #Stripping restricted symbols in artist and album name
+                strip_tags = ('artist', 'album')
+                
                 for rs in restr_symbols:
-                    if v['artist'].find(' ' + rs) != - 1:
-                        v['artist'] = v['artist'].replace(rs, '')
-                    elif v['artist'].find(rs) != - 1:
-                        v['artist'] = v['artist'].replace(rs, '')
-
-                    if v['album'].find(' ' + rs) != - 1:
-                        v['album'] = v['album'].replace(rs, '')
-                    elif v['album'].find(rs) != - 1:
-                        v['album'] = v['album'].replace(rs, '')
+                    for tag in strip_tags:
+                        if v[tag].find(' '+rs and rs):
+                            v[tag] = v[tag].replace(rs, '')
 
                 for wdp in win_depr_punct:
-                    v['artist'] = v['artist'].lstrip(wdp).rstrip(wdp)
-                    v['album'] = v['album'].lstrip(wdp).rstrip(wdp)
+                    for tag in strip_tags:
+                        v[tag] = v[tag].lstrip(wdp).rstrip(wdp)
 
                 #Making path for the extraction
                 file_path = os.path.join(output_path, v['artist'].decode('utf-8'),

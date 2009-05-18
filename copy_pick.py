@@ -1,7 +1,6 @@
 '''
 Created on 16 May 2009
 '''
-
 import os
 import re
 from distutils import file_util, dir_util
@@ -10,40 +9,43 @@ class FileCopierBySign():
     """Makes the extraction in the media collection and copies to the specified
     folder files with the specified genre or another parameter"""
 
+    _TAGS_TO_CLEAN = ('artist', 'album')
+    _OBLIGATORY_TAGS = _TAGS_TO_CLEAN + ('year', )
+    
+    _RESTR_SYMB = ('|', ':', '\\', '/', '?', '<', '>', '*', '"')
+    _DEPR_PUNCT = (' ', '..', '...')
+
     def __init__(self, collection):
         self.collection = collection
 
     def copy(self, output_path, info_type, search_item):
-        restr_symbols = ('|', ':', '\\', '/', '?', '<', '>', '*', '"')
-        win_depr_punct = (' ', '..', '...')
-
-        for k, v in self.collection.items():
+        #Trying iterate scanned tags in collection
+        for current_file_path, scanned_tags in self.collection.items():
             """Creates for each artist and album separate folder and copies
             files to them"""
             try:
-                a = v['artist']
+                tmp_var = self._TAGS_TO_CLEAN[0]
             except TypeError:
-                print ("%r is not a valid audio file") % (k, )
-                return
+                print ("%r is not a valid audio file") % (current_file_path, )
 
-            if v[info_type].find(search_item) != - 1:
+            if scanned_tags[info_type].find(search_item) == - 1:
+                # not found
+                continue
+            else:
                 #Stripping restricted symbols in artist and album name
-                
                 # @note: THIS OPERATION YOU CAN DO IN ONE REGULAR EXPR, THINCK!
-                strip_tags = ('artist', 'album')
-                
-                for tag in strip_tags:
-                    for rs in restr_symbols:
-                        v[tag] = re.sub(r'[ ]?%s' % rs, '', v[tag])
+                for tag in self._TAGS_TO_CLEAN:
+                    for rs in self._RESTR_SYMB:
+                        scanned_tags[tag] = re.sub(r'[ ]?%s' % rs, '', scanned_tags[tag])
 
-                    for wdp in win_depr_punct:
-                        v[tag] = v[tag].strip(wdp)
+                    for wdp in self._DEPR_PUNCT:
+                        scanned_tags[tag] = scanned_tags[tag].strip(wdp)
 
-                #Making path for the extraction
-                file_path = os.path.join(output_path, v['artist'].decode('utf-8'),
-                            v['year'] + ' ' + v['album'].decode('utf-8'))
-                dir_util.mkpath(file_path)
-                #Copying files
-                if v['artist'] != '' and v['album'] != '' and v['year'] != '':
-                    file_util.copy_file(k, file_path, 'update = true')
-
+                # If all obligatory tags exist after cleaning
+                if all([scanned_tags[o_tags] for o_tags in self._OBLIGATORY_TAGS]):
+                    #Making path for the extraction
+                    fmt = "%(artist)s %(year)d %(album)s"
+                    out_file_path = os.path.join(output_path, fmt.decode('utf-8') % scanned_tags)
+                    dir_util.mkpath(out_file_path)
+                    #Copying files
+                    file_util.copy_file(current_file_path, file_path, 'update = true')

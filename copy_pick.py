@@ -3,6 +3,7 @@ Created on 16 May 2009
 '''
 
 import os
+import re
 from distutils import file_util, dir_util
 
 class FileCopierBySign():
@@ -27,16 +28,17 @@ class FileCopierBySign():
 
             if v[info_type].find(search_item) != - 1:
                 #Stripping restricted symbols in artist and album name
+                
+                # @note: THIS OPERATION YOU CAN DO IN ONE REGULAR EXPR, THINCK!
                 strip_tags = ('artist', 'album')
                 
                 for rs in restr_symbols:
                     for tag in strip_tags:
-                        if v[tag].find(' '+rs and rs):
-                            v[tag] = v[tag].replace(rs, '')
+                        v[tag] = re.sub(r'[ ]?%s' % rs, '', v[tag])
 
                 for wdp in win_depr_punct:
                     for tag in strip_tags:
-                        v[tag] = v[tag].lstrip(wdp).rstrip(wdp)
+                        v[tag] = v[tag].strip(wdp)
 
                 #Making path for the extraction
                 file_path = os.path.join(output_path, v['artist'].decode('utf-8'),

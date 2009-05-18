@@ -44,7 +44,10 @@ class FileCopierBySign():
                 # If all obligatory tags exist after cleaning
                 if all([scanned_tags[o_tags] for o_tags in self._OBLIGATORY_TAGS]):
                     #Making path for the extraction
+                    
+                    #@TODO: automatic build fmt parameter from _OBLIGATORY_TAGS
                     fmt = "%(artist)s %(year)d %(album)s"
+                    
                     out_file_path = os.path.join(output_path, fmt.decode('utf-8') % scanned_tags)
                     dir_util.mkpath(out_file_path)
                     #Copying files

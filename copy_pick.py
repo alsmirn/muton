@@ -28,7 +28,7 @@ class FileCopierBySign():
             except TypeError:
                 print ("%r is not a valid audio file") % (current_file_path, )
 
-            if scanned_tags[info_type].find(search_item) == - 1:
+            if not scanned_tags[info_type].count(search_item):
                 # not found
                 continue
             else:

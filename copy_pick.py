@@ -19,7 +19,9 @@ class FileCopierBySign():
         self.collection = collection
 
     def copy(self, output_path, info_type, search_item):
-        """Trying iterate scanned tags in collection"""
+        """Copy files to the selected folder with specified parameters
+        """
+        #Trying iterate scanned tags in collection
         for current_file_path, scanned_tags in self.collection.items():
             #Creates for each artist and album separate folder and copies
             #files to them

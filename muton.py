@@ -118,6 +118,7 @@ def main(argv=None):
             elif opt in ('-e', '--export'):
                 wr_output = outputter.ScannedInfoWriter(c)
                 wr_output.write(out_path, mode, f_type)
+                wrout_set = 1
             elif opt in ('-w', '--wr_tags'):
                 write_tags = tag_writer.TagWriteManager(c)
                 write_tags.tag_write_man(path, mode, tag_type, new_str)
@@ -130,16 +131,14 @@ def main(argv=None):
         print >>sys.stderr, "use --help ;)"
         return 2
 
-    scanner = collection.MediaScanner()
+    #scanner = collection.MediaScanner()
     #write_tags = tag_writer.TagWriteManager(c)
     #extract = copy_pick.FileCopierBySign(c)
-    wr_output = outputter.ScannedInfoWriter(c)
+    if wrout set != 0:
+        wr_output = outputter.ScannedInfoWriter(c)
+        wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
     #rename = renamer.Renamer(c)
     #pattern = '%track% - %artist% - %title%'
-
-    #What's this?
-    wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
-
     #scan_albums.scan()
     #rename.manager('recursive', '', '%artist% - %title%')
     #extract.copy('F:\\', 'genre', 'Post-Rock')

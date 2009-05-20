@@ -69,14 +69,19 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], 'tewro:n:s:m:f:g:c:',
-                ['extr', 'export', 'wr_tags', 'rename',
+            opts, args = getopt.getopt(argv[1:], 'vhtewro:n:s:m:f:g:c:',
+                ['version', 'help', 'extr', 'export', 'wr_tags', 'rename',
                 'o_path=', 'pattern=', 'new_str=', 'mode=',
                 'f_type=', 'tag_type=', 'search_item='])
         except getopt.GetoptError, msg:
             raise Usage(msg)
 
         for opt, arg in opts:
+            if opt in ('-v', '--version'):
+                print Usage.version
+                sys.exit()
+            elif opt in ('-h', '--help'):
+                raise Usage('')
             elif opt in ('-t', '--extr'):
                 extract = copy_pick.FileCopierBySign(c)
                 extract.copy(out_path, tag_type, search_item)
@@ -127,7 +132,7 @@ def main(argv=None):
 
     scanner = collection.MediaScanner()
     #write_tags = tag_writer.TagWriteManager(c)
-    #extract = copy_pick.FileCopierBySgn(c)
+    #extract = copy_pick.FileCopierBySign(c)
     wr_output = outputter.ScannedInfoWriter(c)
     #rename = renamer.Renamer(c)
     #pattern = '%track% - %artist% - %title%'

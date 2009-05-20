@@ -76,24 +76,25 @@ def main(argv=None):
         except getopt.GetoptError, msg:
             raise Usage(msg)
 
+        scanner = collection.MediaScanner()
+        # Treat arg as possible path for scan
+        for arg in args:
+            if os.path.isdir(arg):
+                path = unicode(arg)
+                c = scanner.scan(path)
+            else:
+                print arg, "is not a directory!"
+        if args == []:
+            #If no path specified, search in current derectory
+            c = scanner.scan(os.getcwd())
+            #c = scanner.scan(u"/home/alexey/ChrisGoesRock/")
+
         for opt, arg in opts:
             if opt in ('-v', '--version'):
                 print Usage.version
                 sys.exit()
             elif opt in ('-h', '--help'):
                 raise Usage('')
-            elif opt in ('-t', '--extr'):
-                extract = copy_pick.FileCopierBySign(c)
-                extract.copy(out_path, tag_type, search_item)
-            elif opt in ('-e', '--export'):
-                wr_output = outputter.ScannedInfoWriter(c)
-                wr_output.write(out_path, mode, f_type)
-            elif opt in ('-w', '--wr_tags'):
-                write_tags = tag_writer.TagWriteManager(c)
-                write_tags.tag_write_man(path, mode, tag_type, new_str)
-            elif opt in ('-r', '--rename'):
-                rename = renamer.Renamer(c)
-                rename.manager(mode, '', pattern)
             elif opt in ('-o', '--out_path'):
                 if os.path.isdir(arg):
                     out_path = unicode(arg)
@@ -111,19 +112,18 @@ def main(argv=None):
                 tag_type = arg
             elif opt in ('-c', '--search_item'):
                 search_item = arg
-
-        scanner = collection.MediaScanner()
-        # Treat arg as possible path for scan
-        for arg in args:
-            if os.path.isdir(arg):
-                path = unicode(arg)
-                c = scanner.scan(path)
-            else:
-                print arg, "is not a directory!"
-        if args == []:
-            #If no path specified, search in current derectory
-            c = scanner.scan(os.getcwd())
-            #c = scanner.scan(u"/home/alexey/ChrisGoesRock/")
+            elif opt in ('-t', '--extr'):
+                extract = copy_pick.FileCopierBySign(c)
+                extract.copy(out_path, tag_type, search_item)
+            elif opt in ('-e', '--export'):
+                wr_output = outputter.ScannedInfoWriter(c)
+                wr_output.write(out_path, mode, f_type)
+            elif opt in ('-w', '--wr_tags'):
+                write_tags = tag_writer.TagWriteManager(c)
+                write_tags.tag_write_man(path, mode, tag_type, new_str)
+            elif opt in ('-r', '--rename'):
+                rename = renamer.Renamer(c)
+                rename.manager(mode, '', pattern)
 
     except Usage, err:
         print >>sys.stderr, err.msg

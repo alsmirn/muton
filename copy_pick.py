@@ -51,4 +51,4 @@ class FileCopierBySign():
                     out_file_path = os.path.join(output_path, fmt.decode('utf-8') % scanned_tags)
                     dir_util.mkpath(out_file_path)
                     #Copying files
-                    file_util.copy_file(current_file_path, file_path, 'update = true')
+                    file_util.copy_file(current_file_path, out_file_path, 'update = true')

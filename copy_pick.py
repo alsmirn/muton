@@ -19,10 +19,10 @@ class FileCopierBySign():
         self.collection = collection
 
     def copy(self, output_path, info_type, search_item):
-        #Trying iterate scanned tags in collection
+        """Trying iterate scanned tags in collection"""
         for current_file_path, scanned_tags in self.collection.items():
-            """Creates for each artist and album separate folder and copies
-            files to them"""
+            #Creates for each artist and album separate folder and copies
+            #files to them
             try:
                 tmp_var = self._TAGS_TO_CLEAN[0]
             except TypeError:

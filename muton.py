@@ -20,37 +20,20 @@ class Usage(Exception):
     """
     Command line feature design:
     
-    python muton.py [COMMANDS] path_to_collection
+    python muton.py (COMMANDS) one_path_to_collection
     
     COMMANDS:
-
-    #0 Scan process is running always if in command line specified #1,2 or 3 
-    blocks. This -s option is not obligatory, it uses when you want specifie 
-    musical files format. 
-
-    -s                Scan tags in specified format (by default all formats)
-    --format f1,f2,   Adjustment of format (mp3, flac, ape)
-    
-
-    #1 Scan all files and write tags information on standard output (custom).
-
     -w                Writes all tags to standard output in custom format 
                       (default format is CSV).
     -f filename       Means "file", specifies output file
     --format fmt_name Set format of output ('album', 'atom')
                       @TODO normal output_mode in outputter module.
-                      
 
-    #2 Scan all files and rename by (custom) template.
-
-    -rn               Rename files by template
+    -n                Rename files by template
                       (default template is: '%track% - %artist% - %title%').
     --template "t"    Specifies custom template.
     
-
-    #3 Scan all files and copy selected by tag files to specified folder.
-
-    -cp tag ad folder Select all files which has ad (admission) in tag and copy 
+    -c tag ad folder  Select all files which has ad (admission) in tag and copy 
                       to specified folder
                       
     
@@ -65,78 +48,58 @@ def main(argv=None):
     """
     Needs rewrite according Usage message
     """
+    time_start = time.time()
+    
     if argv is None:
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], 'vhtewro:n:s:m:f:g:c:',
-                ['version', 'help', 'extr', 'export', 'wr_tags', 'rename',
-                'o_path=', 'pattern=', 'new_str=', 'mode=',
-                'f_type=', 'tag_type=', 'search_item='])
+            optlist, args = getopt.getopt(argv[1:], 'vhwf:z', 
+                                          ['version', 'help', 'format=', ])
         except getopt.GetoptError, msg:
             raise Usage(msg)
 
-        scanner = collection.MediaScanner()
         # Treat arg as possible path for scan
         for arg in args:
             if os.path.isdir(arg):
                 path = unicode(arg)
-                c = scanner.scan(path)
+                break
             else:
-                print arg, "is not a directory!"
+                print "%s is not a directory!" % (arg,)
+                sys.exit(True)
         if args == []:
             #If no path specified, search in current derectory
-            c = scanner.scan(os.getcwd())
-            #c = scanner.scan(u"/home/alexey/ChrisGoesRock/")
+            path = os.getcwd()
 
-        for opt, arg in opts:
+        for opt, arg in optlist:
             if opt in ('-v', '--version'):
                 print Usage.version
                 sys.exit()
             elif opt in ('-h', '--help'):
                 raise Usage('')
-            elif opt in ('-o', '--out_path'):
-                if os.path.isdir(arg):
-                    out_path = unicode(arg)
-                else:
-                    print arg, "is not a directory!"
-            elif opt in ('-n', '--pattern'):
-                pattern = arg
-            elif opt in ('-s', '--new_str'):
-                new_str = arg
-            elif opt in ('-m', '--mode'):
-                mode = arg
-            elif opt in ('-f', '--f_type'):
-                f_type = arg
-            elif opt in ('-g', '--tag_type'):
-                tag_type = arg
-            elif opt in ('-c', '--search_item'):
-                search_item = arg
-            elif opt in ('-t', '--extr'):
-                extract = copy_pick.FileCopierBySign(c)
-                extract.copy(out_path, tag_type, search_item)
-            elif opt in ('-e', '--export'):
+            elif opt in ('-w', ):
+                scaner = collection.MediaScanner()
+                c = scaner.scan(path)
                 wr_output = outputter.ScannedInfoWriter(c)
-                wr_output.write(out_path, mode, f_type)
-                wrout_set = 1
-            elif opt in ('-w', '--wr_tags'):
-                write_tags = tag_writer.TagWriteManager(c)
-                write_tags.tag_write_man(path, mode, tag_type, new_str)
-            elif opt in ('-r', '--rename'):
-                rename = renamer.Renamer(c)
-                rename.manager(mode, '', pattern)
+                wr_output.write(u'chris_goes_rock', 'album', 'xml')
 
     except Usage, err:
         print >>sys.stderr, err.msg
         print >>sys.stderr, "use --help ;)"
         return 2
 
+    print 'Execution time is %3.1f seconds.' % (time.time() - time_start,)
+
     #scanner = collection.MediaScanner()
     #write_tags = tag_writer.TagWriteManager(c)
     #extract = copy_pick.FileCopierBySign(c)
-    if wrout set != 0:
-        wr_output = outputter.ScannedInfoWriter(c)
-        wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
+
+
+    #if wrout_set != 0:
+        #wr_output = outputter.ScannedInfoWriter(c)
+        #wr_output.write(u'information_chris_goes_rock', 'album', 'xml')
+        
+        
     #rename = renamer.Renamer(c)
     #pattern = '%track% - %artist% - %title%'
     #scan_albums.scan()
@@ -144,10 +107,8 @@ def main(argv=None):
     #extract.copy('F:\\', 'genre', 'Post-Rock')
     ##write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
+
 if __name__ == "__main__":
 
-    time_start = time.ctime()
-
     sys.exit(main())
-    #This code don't work ;)
-    print 'Execution time is %d seconds.' % (time_start - time.ctime(),)
+    

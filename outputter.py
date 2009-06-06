@@ -67,7 +67,8 @@ class ScannedInfoWriter():
                 print "%r is not a valid audio file" % (path, )
                 return
         f.close()
-
+    
+    #@TODO: rewrite function using dom.minidom
     def make_XML(self, output_mode, output_xml):
         """Returns XML with all pattern info (for example - album info)."""
 

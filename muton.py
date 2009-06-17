@@ -24,25 +24,28 @@ class Usage(Exception):
     
     COMMANDS:
     -w                Writes all tags to standard output in custom format 
-                      (default format is CSV).
+                      (default format is XML).
     -f filename       Means "file", specifies output file
     --format fmt_name Set format of output ('album', 'atom')
                       @TODO normal output_mode in outputter module.
-
-    -n                Rename files by template
+   
+    -n                Renames files by template
                       (default template is: '%track% - %artist% - %title%').
     --template "t"    Specifies custom template.
     
-    -c tag ad folder  Select all files which has ad (admission) in tag and copy 
+    -c tag ad folder  Selects all files which has ad (admission) in tag and copy 
                       to specified folder
-                      
+    -o output path    Folder to copy files      
+
+    -r                Writes text to specified tags in:
+                      a) specified files;
+                      b) all files in specified folder.
     
-    #4 Manual tags rewriting...
     """
 
 def main(argv=None):
     """
-    Main function ;)
+    Main function, curiously enough ;)
     """
 
     """
@@ -54,8 +57,8 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            optlist, args = getopt.getopt(argv[1:], 'vhwf:z', 
-                                          ['version', 'help', 'format=', ])
+            optlist, args = getopt.getopt(argv[1:], 'vhwncf:t:o:z', 
+            ['version', 'help', 'format=', 'template='])
         except getopt.GetoptError, msg:
             raise Usage(msg)
 
@@ -77,11 +80,32 @@ def main(argv=None):
                 sys.exit()
             elif opt in ('-h', '--help'):
                 raise Usage('')
+            elif opt in ('-o', '--out_path'):
+                out_path = unicode(arg)
+            elif opt in ('-g', '--tag_type'):
+                tag_type = arg       
+            elif opt in ('-s', '--search_item'):
+                search_item = arg   
             elif opt in ('-w', ):
                 scaner = collection.MediaScanner()
                 c = scaner.scan(path)
                 wr_output = outputter.ScannedInfoWriter(c)
-                wr_output.write(u'chris_goes_rock', 'album', 'xml')
+                wr_output.write(u'E:\\', 'album', 'xml')
+            elif opt in ('-n', ):
+                scaner = collection.MediaScanner()
+                c = scaner.scan(path)
+                rename = renamer.Renamer(c)
+                rename.manager('recursive', '', '%track% - %artist% - %title%')
+            elif opt in ('-c', ):
+                scaner = collection.MediaScanner()
+                c = scaner.scan(path)    
+                extract = copy_pick.FileCopierBySign(c)
+                extract.copy(u'E:\\', 'genre', 'Death Metal')
+            elif opt in ('-r', ):
+                scaner = collection.MediaScanner()
+                c = scaner.scan(path) 
+                write_tags = tag_writer.TagWriteManager(c)
+                write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
     except Usage, err:
         print >>sys.stderr, err.msg
@@ -105,7 +129,7 @@ def main(argv=None):
     #scan_albums.scan()
     #rename.manager('recursive', '', '%artist% - %title%')
     #extract.copy('F:\\', 'genre', 'Post-Rock')
-    ##write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
+    #write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
 
 if __name__ == "__main__":

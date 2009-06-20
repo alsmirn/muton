@@ -36,11 +36,8 @@ class FileCopierBySign():
             else:
                 #Stripping restricted symbols in artist and album name
                 for tag in self._TAGS_TO_CLEAN:
-                    #try:
                     for rs in self._RESTR_SYMB:
-                        scanned_tags[tag] = re.sub('%s' % rs, '', scanned_tags[tag])
-#                    except Exception, msg:
-#                        print Exception, msg
+                        scanned_tags[tag] = re.sub(rs, '', scanned_tags[tag])
                     for wdp in self._DEPR_PUNCT:
                         scanned_tags[tag] = scanned_tags[tag].strip(wdp)
 

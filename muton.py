@@ -57,7 +57,7 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            optlist, args = getopt.getopt(argv[1:], 'vhwncf:t:o:z', 
+            optlist, args = getopt.getopt(argv[1:], 'vhwnrcf:t:o:z', 
             ['version', 'help', 'format=', 'template='])
         except getopt.GetoptError, msg:
             raise Usage(msg)
@@ -71,7 +71,7 @@ def main(argv=None):
                 print "%s is not a directory!" % (arg,)
                 sys.exit(True)
         if args == []:
-            #If no path specified, search in current derectory
+            #If no path specified, search in current directory
             path = os.getcwd()
 
         for opt, arg in optlist:
@@ -87,25 +87,25 @@ def main(argv=None):
             elif opt in ('-s', '--search_item'):
                 search_item = arg   
             elif opt in ('-w', ):
-                scaner = collection.MediaScanner()
-                c = scaner.scan(path)
+                scanner = collection.MediaScanner()
+                c = scanner.scan(path)
                 wr_output = outputter.ScannedInfoWriter(c)
                 wr_output.write(u'E:\\', 'album', 'xml')
             elif opt in ('-n', ):
-                scaner = collection.MediaScanner()
-                c = scaner.scan(path)
+                scanner = collection.MediaScanner()
+                c = scanner.scan(path)
                 rename = renamer.Renamer(c)
                 rename.manager('recursive', '', '%track% - %artist% - %title%')
             elif opt in ('-c', ):
-                scaner = collection.MediaScanner()
-                c = scaner.scan(path)    
+                scanner = collection.MediaScanner()
+                c = scanner.scan(path)    
                 extract = copy_pick.FileCopierBySign(c)
-                extract.copy(u'E:\\', 'genre', 'Death Metal')
+                extract.copy(u'E:\\', 'genre', 'Metal')
             elif opt in ('-r', ):
-                scaner = collection.MediaScanner()
-                c = scaner.scan(path) 
+                scanner = collection.MediaScanner()
+                c = scanner.scan(path) 
                 write_tags = tag_writer.TagWriteManager(c)
-                write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
+                write_tags.tag_write_man('single', u'E:\\Test\\test\\04 - Ashes of Your Enemy - Binge & Purge.Mp3', 'album', 'alb!!!')
 
     except Usage, err:
         print >>sys.stderr, err.msg
@@ -114,8 +114,10 @@ def main(argv=None):
 
     print 'Execution time is %3.1f seconds.' % (time.time() - time_start,)
 
-    #scanner = collection.MediaScanner()
-    #write_tags = tag_writer.TagWriteManager(c)
+#    scanner = collection.MediaScanner()
+#    c = scanner.scan(u'E:\\Test\\test')
+#    
+#    write_tags = tag_writer.TagWriteManager(c)
     #extract = copy_pick.FileCopierBySign(c)
 
 
@@ -128,7 +130,7 @@ def main(argv=None):
     #pattern = '%track% - %artist% - %title%'
     #scan_albums.scan()
     #rename.manager('recursive', '', '%artist% - %title%')
-    #extract.copy('F:\\', 'genre', 'Post-Rock')
+    #extract.copy('E:\\', 'genre', 'Metal')
     #write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
 

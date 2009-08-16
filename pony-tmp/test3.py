@@ -1,15 +1,13 @@
-import re
+from mutagen.mp3 import MP3
+import cProfile, pstats
 
-stg = {1:['a','aa'], 2:'b', 3:'c', 4:'d', 5:'e'}
+def mp3_reader():
 
-beg = 0
-portion = 3
-if beg < len(stg.keys()):
-    for i in range(1,len(stg), 2):
-        print stg.items()[i]
-        beg += portion
-    
-    
+    mp3_audio = MP3('D:\\Downloads\\Raubtier\\2009 Det finns bara krig\\01 - Raubtier - Det finns bara krig.mp3')
+#    print mp3_audio.items()
+cProfile.run('mp3_reader()', 'log')
+p = pstats.Stats('log')
+#p.strip_dirs().sort_stats('calls').print_stats(20)
+p.sort_stats('calls', 'file').print_stats()
 
-
-    
+#mp3_reader()

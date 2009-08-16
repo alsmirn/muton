@@ -5,6 +5,8 @@ from mutagen.flac import FLAC
 from mutagen.apev2 import APEv2
 from mutagen.oggvorbis import OggVorbis
 
+import cProfile, pstats
+
 class MediaScanner():
     """
     @see: Scans input folder (dirpath) and returns a list of all
@@ -21,6 +23,7 @@ class MediaScanner():
     def scan(self, path):
         self.scan_fs(path)
         self.read_tags()
+#        cProfile.runctx("self.read_tags()", globals(), locals(), 'log')
         return self.tag_info
 
     def scan_fs(self, path):
@@ -29,12 +32,12 @@ class MediaScanner():
 
         @param dirpath: input dirpath
         """
-
+        ext_list = '.mp3', '.ape', '.ogg', '.flac'
         file_list = os.listdir(path)
 
         #Scanning the whole contents of the folder
         allpaths = [os.path.join(path, name) for name in file_list \
-                    if name[-4:].lower() or name[-5:].lower() == '.flac']
+        if name[-4:].lower() in ext_list or name[-5:].lower() == '.flac']
 
         #Selecting only folders
         subdirs_paths = [os.path.join(path, name) for name in file_list \
@@ -48,25 +51,22 @@ class MediaScanner():
             self.scan_fs(subdir)
 
     def read_tags(self):
-        ext_list = '.mp3', '.flac', '.ape', '.ogg'
 
         #Creating a dictionary with path as key and tags as value
         for path in self._paths:
             lower_path = path.lower()
-            ##It would be great to execute in this way, but I don't know how
-            ##to construct methods names dynamically
-#            for ext in ext_list:
-#                if re.search('\\' + ext + '$', lower_path):
-#                    self.tag_info[path] = self.read_mp3_tag(path)
-#                    continue
             if re.search('\.mp3' + '$', lower_path):
                 self.tag_info[path] = self.read_mp3_tag(path)
+                continue
             if re.search('\.flac' + '$', lower_path):
                 self.tag_info[path] = self.read_flac_tag(path)
+                continue
             if re.search('\.ape' + '$', lower_path):
                 self.tag_info[path] = self.read_ape_tag(path)
+                continue
             if re.search('\.ogg' + '$', lower_path):
                 self.tag_info[path] = self.read_ogg_tag(path)
+                continue
 
     def read_mp3_tag(self, path):
         """
@@ -78,8 +78,8 @@ class MediaScanner():
         try:
             mp3_audio = MP3(path) #Reading tags
         except mutagen.mp3.HeaderNotFoundError:
-            media_info.album = str()
-            media_info.bitrate = int()
+#            media_info.album = str() #Don't know for what
+#            media_info.bitrate = int() #Don't know for what
             media_info.tag_error = 'No MP3 tag found or %r is not a valid MP3 file' \
             % (path.encode(sys.stdout.encoding or "utf-8"), )
             return media_info
@@ -100,7 +100,8 @@ class MediaScanner():
         if 'USLT' in mp3_audio: media_info.lyrics = str(mp3_audio['USLT'])
 
         #There can be infinite numbers of comment tags, so we can read any
-        bad_comms = "COMM:ID3v1:'eng'"
+        #First we escaping non printable tags
+        bad_comms = "COMM:ID3v1:'eng'", "COMM:\x01:'\\x00\\x00Z'"
 
         for key in mp3_audio.keys():
             if not re.search('iTun', key) and key not in bad_comms \
@@ -201,7 +202,7 @@ class MediaScanner():
         except mutagen.apev2.APENoHeaderError:
             media_info = "No APE tag found or %r is not a valid APE file" % \
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
-            return media_info
+            return media_info 
 
         ape_tags = {'artist': '', 'title': '', 'album': '', 'year': '',
                     'genre': '', 'track': '', 'comment': '',

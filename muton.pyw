@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import time, getopt, os, sys
 from optparse import OptionParser
@@ -149,18 +148,18 @@ def main(argv=None):
 class App:
 
     def __init__(self):
-        # Загружаем файл интерфейса
+
         self.main_xml = "glade_files/export.glade"        
-        # дерево элементов интерфейса
+
         self.wTree = gtk.glade.XML(self.main_xml)       
-        # Словарик, задающий связи событий с функциями-обработчиками
+
         dic = { 
         "exp_click" : self.export,
                 "close_click": self.close_app,
           }
-        # Магическая команда, соединяющая сигналы с обработчиками
+
         self.wTree.signal_autoconnect(dic)
-        # Соединяем событие закрытия окна с функцией завершения приложения￿
+
         self.dialog = self.wTree.get_widget("dialog1")
         if (self.dialog):
             self.dialog.connect("destroy", self.close_app)
@@ -173,22 +172,13 @@ class App:
         c = scanner.scan(unicode(path))
         wr_output = outputter.ScannedInfoWriter(c)
         wr_output.write(out_path, 'album', format)
-        
-#        self.exp_finished = "glade_files/exp_finished.glade"
-#        self.MsgTree = gtk.glade.XML(self.exp_finished)
-#        # Словарик, задающий связи событий с функциями-обработчиками
-#        dic = { 
-#        "ok" : self.close_app,
-#          }
-#        self.MsgTree.signal_autoconnect(dic)
-#        self.dialog = self.MsgTree.get_widget("messagedialog1")
+
         
     def close_app(self, widget):    
         gtk.main_quit()    
         
 if __name__ == "__main__":
 
-#    main()
     app = App()
     gtk.main()
 

@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkDialog" id="dialog1">
+    <property name="visible">True</property>
+    <property name="extension_events">cursor</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Muton</property>
+    <property name="default_width">320</property>
+    <property name="default_height">260</property>
+    <property name="type_hint">normal</property>
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dlg">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <widget class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label2">
+            <property name="visible">True</property>
+            <property name="xpad">1</property>
+            <property name="label" translatable="yes">&#x423;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x443; &#x441; &#x444;&#x430;&#x439;&#x43B;&#x430;&#x43C;&#x438;:</property>
+            <property name="ellipsize">middle</property>
+          </widget>
+          <packing>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="path_entry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="max_length">50</property>
+            <property name="invisible_char">&#x25CF;</property>
+            <property name="width_chars">49</property>
+          </widget>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label3">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&#x423;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x43F;&#x430;&#x43F;&#x43A;&#x443; &#x434;&#x43B;&#x44F; &#x444;&#x430;&#x439;&#x43B;&#x430; &#x44D;&#x43A;&#x441;&#x43F;&#x43E;&#x440;&#x442;&#x430;:</property>
+          </widget>
+          <packing>
+            <property name="fill">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="out_path_entry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="invisible_char">&#x25CF;</property>
+          </widget>
+          <packing>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label4">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&#x423;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x444;&#x43E;&#x440;&#x43C;&#x430;&#x442; &#x444;&#x430;&#x439;&#x43B;&#x430; &#x44D;&#x43A;&#x441;&#x43F;&#x43E;&#x440;&#x442;&#x430;:</property>
+          </widget>
+          <packing>
+            <property name="fill">False</property>
+            <property name="position">6</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="format">
+            <property name="visible">True</property>
+            <property name="tooltip" translatable="yes">&#x424;&#x43E;&#x440;&#x43C;&#x430;&#x442; &#x444;&#x430;&#x439;&#x43B;&#x430; &#x44D;&#x43A;&#x441;&#x43F;&#x43E;&#x440;&#x442;&#x430;</property>
+            <property name="active">1</property>
+            <property name="add_tearoffs">True</property>
+            <property name="items" translatable="yes">XML
+CVS</property>
+          </widget>
+          <packing>
+            <property name="fill">False</property>
+            <property name="padding">12</property>
+            <property name="position">7</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <widget class="GtkButton" id="button1">
+                <property name="label" translatable="yes">&#x42D;&#x43A;&#x441;&#x43F;&#x43E;&#x440;&#x442;</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip" translatable="yes">&#x42D;&#x43A;&#x441;&#x43F;&#x43E;&#x440;&#x442; &#x438;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x438; &#x432; &#x444;&#x430;&#x439;&#x43B;</property>
+                <signal name="clicked" handler="exp_click"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="button2">
+                <property name="label">gtk-quit</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="close_click"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>

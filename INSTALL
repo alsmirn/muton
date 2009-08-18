@@ -1,0 +1,11 @@
+
+Installation notes
+==================
+
+Required packages:
+python (>=2.5)
+python-mutagen
+python-gtk2
+python-glade2
+
+@TODO: make debian/control file.

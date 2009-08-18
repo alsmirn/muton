@@ -146,28 +146,31 @@ def main(argv=None):
     #write_tags.tag_write_man('single', u'E:\\Test\\test\\02 - October Tide - Rain Without End.mp3', 'album', 'album!!!')
 
 class App:
-
+    """This class makes the GUI interface on the basis of the glade XML files"""
+    
     def __init__(self):
-
+        #By now it's only for export, so the name is
         self.main_xml = "glade_files/export.glade"        
-
+        #Parsing the glade xml file
         self.wTree = gtk.glade.XML(self.main_xml)       
-
+        #Dictionary for the export button action
         dic = { 
         "exp_click" : self.export,
-                "close_click": self.close_app,
           }
 
         self.wTree.signal_autoconnect(dic)
-
+        #Making close equal to destroy
         self.dialog = self.wTree.get_widget("dialog1")
         if (self.dialog):
             self.dialog.connect("destroy", self.close_app)
             
     def export(self, widget):
+        """By now I realized only one possibility of muton"""
+        #Getting values from text fields 
         path = self.wTree.get_widget('path_entry').get_text()
         out_path = self.wTree.get_widget('out_path_entry').get_text()
         format = self.wTree.get_widget('format').get_active_text().lower()
+        #Executing export
         scanner = collection.MediaScanner()
         c = scanner.scan(unicode(path))
         wr_output = outputter.ScannedInfoWriter(c)
@@ -181,5 +184,3 @@ if __name__ == "__main__":
 
     app = App()
     gtk.main()
-
-

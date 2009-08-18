@@ -1,4 +1,7 @@
-import os, re, sys
+import os
+import re
+import sys
+
 import mutagen
 from mutagen.mp3 import MP3
 from mutagen.flac import FLAC

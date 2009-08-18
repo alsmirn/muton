@@ -1,4 +1,7 @@
-import os, codecs, re, sys
+import re
+import os
+import sys
+import codecs
 
 class Renamer():
     def __init__(self, collection):

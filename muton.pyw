@@ -1,13 +1,21 @@
 #!/usr/bin/env python
 
-import time, getopt, os, sys
+import os
+import sys
+import time
+import getopt
 from optparse import OptionParser
+
+import gtk
+import pygtk
+import gtk.glade
+
 import collection
 import tag_writer
 import outputter
 import renamer
 import copy_pick
-import pygtk, gtk, gtk.glade
+
 pygtk.require('2.0')
 
 class Usage(Exception):

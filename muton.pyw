@@ -2,7 +2,6 @@
 
 import time, getopt, os, sys
 from optparse import OptionParser
-import cProfile, pstats
 import collection
 import tag_writer
 import outputter

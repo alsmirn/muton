@@ -5,8 +5,6 @@ from mutagen.flac import FLAC
 from mutagen.apev2 import APEv2
 from mutagen.oggvorbis import OggVorbis
 
-import cProfile, pstats
-
 class MediaScanner():
     """
     @see: Scans input folder (dirpath) and returns a list of all

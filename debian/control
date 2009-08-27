@@ -6,4 +6,4 @@ Standards-Version: 3.7.2
 Package: muton
 Architecture: all
 Depends: python (>=2.5), python-mutagen, python-gtk2, python-glade2
-Description: musical collection orderer.
+Description: musical collection organizer.

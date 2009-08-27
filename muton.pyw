@@ -4,7 +4,7 @@ import os
 import sys
 import time
 import getopt
-from optparse import OptionParser
+from optparse import Option, OptionGroup, OptionParser
 
 import gtk
 import pygtk
@@ -17,43 +17,6 @@ import renamer
 import copy_pick
 
 pygtk.require('2.0')
-
-class Usage(Exception):
-    """Usage class ;)
-    """
-
-    version = '0.20090826'
-
-    def __init__(self, msg):
-        self.msg = \
-    """
-    Command line feature design:
-    
-    python muton.py (COMMANDS) one_path_to_collection
-    
-    COMMANDS:
-    -e                Exports info from tags to standard output in custom format 
-                      (default format is XML).
-                      For example: muton.exe -o e:\ -e d:\Downloads
-                      It will export info from files in path "d:\Downloads" to 
-                      xml file in path "e:\"
-   
-    -n                Renames files by template
-                      (default template is: '%track% - %artist% - %title%').
-   
-    -c tag and folder Selects all files which has ad (admission) in tag and 
-                      copies to specified folder
-                        
-    -r                Writes text to specified tags in:
-                      a) specified files;
-                      b) all files in specified folder.
- 
-    -o output path    Folder to copy files                         
-    -f filename       Means "file", specifies output file (temporary not avail.)
-    --template "t"    Specifies custom template  (temporary not avail.)
-    --format fmt_name Set format of output ('album', 'atom')  (temp. not avail.)
-    """
-    #@TODO: normal output_mode in outputter module.
 
 
 class App:
@@ -91,23 +54,61 @@ class App:
         gtk.main_quit()    
 
 
-if __name__ == "__main__":
+def _tag_export_callback(option, opt, value, parser):
     
-    parser = OptionParser()
-#    option_list = [
-#        make_option('-e', '--export', type='bool', 
-#            action='store_const', const=0, 
-#            dest='action', default=False,
-#            help='export tags into specified file'),
-#    ]
-#    parser = OptionParser(option_list=option_list)
-    options, args = parser.parse_args()
+    parser.rargs = filter(lambda x: not x.startswith('-'), parser.rargs)
 
-    #@TODO: use callbacks from optparse lib to rewrite console control system 
+    if len(parser.rargs) == 2:
+        scanner = collection.MediaScanner()
+        c = scanner.scan(unicode(parser.rargs[0]))
+        wr_output = outputter.ScannedInfoWriter(c)
+        wr_output.write(parser.rargs[1], parser.values.resolution, 
+            parser.values.fmt)
+        sys.exit(0)
+    elif len(parser.rargs) < 2:
+        print 'Not enough arguments to run export'
+        sys.exit(1)
+    else:
+        print 'Too much arguments to run export'
+        print 'Note: additional parameters goes before main...'
+        sys.exit(1)
 
-    if not len(args):
+def _init_parser():
+    parser = OptionParser(version="%prog 0.20090827",
+        usage="%prog [SECONDARY OPTIONS] (PRIMARY OPTIONS) ARGS\n"
+        "Usage note: without options and args start graphical interface")
+
+    primary_group = OptionGroup(parser, "PRIMARY OPTIONS")
+    secondary_group = OptionGroup(parser, "SECONDARY OPTIONS")
+
+    primary_group.add_option('-e', action='callback', 
+        callback=_tag_export_callback,
+        help="exports info from tags to specified file in custom format.\n"
+            "ARGS: path_to_collection path_to_output_file.fmt"),
+    
+    secondary_group.add_option('--fmt', type='choice', dest='fmt', 
+        default='xml', choices=['xml', 'csv'], 
+        help='specifies format of output collection description'),
+    #@TODO: using incrementation
+    secondary_group.add_option('--res', type='choice', dest='resolution', 
+        default='album', choices=['album', ],
+        help='specifies resolution of output collection description'),
+    
+    parser.add_option_group(primary_group)
+    parser.add_option_group(secondary_group)
+    
+    return parser
+
+def _controller():
+    
+    if len(sys.argv) == 1:
+        # graphical interface call
         app = App()
         gtk.main()
     else:
-        parser.error("incorrect number of arguments")
-        
+        # command line usage
+        _init_parser().parse_args()
+
+if __name__ == "__main__":
+    sys.exit(_controller())
+    

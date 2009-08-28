@@ -142,8 +142,7 @@ class MediaScanner():
             'label', 'radiostationname', 'bpm', 'ensemble', 'conductor', 
             'compilation', 'isrc', 'discnumber', 'originalartist', 'url', 
             'authorurl', 'radiostationurl', 'audiosourceurl', 'buycdurl', 
-            'audiofileurl',
-        ]
+            'audiofileurl']
         flac_tags = dict().fromkeys(flac_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
@@ -212,8 +211,7 @@ class MediaScanner():
             'album artist', 'label', 'radiostationname', 'ensemble', 
             'conductor', 'compilation','isrc', 'discnumber', 'originalartist', 
             'url', 'authorurl', 'radiostationurl', 'audiosourceurl', 
-            'buycdurl', 'audiofileurl', 'composer'
-        ]
+            'buycdurl', 'audiofileurl', 'composer']
         ape_tags = dict().fromkeys(ape_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
@@ -278,8 +276,7 @@ class MediaScanner():
             'compilation', 'isrc', 'discnumber', 'originalartist', 
             'origartist', 'album_artist', 'compilation', 'url', 'authorurl', 
             'radiostationurl', 'audiosourceurl', 'buycdurl', 'audiofileurl', 
-            'coverartmime', 'encoder'
-        ]
+            'coverartmime', 'encoder']
         ogg_tags = dict().fromkeys(ogg_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
@@ -368,27 +365,25 @@ class MediaFileInfo(dict):
     def __setattr__(self, item, value):
         """Maps attributes to values. Only if we are initialized."""
 
-        tag_names = ('_MediaFileInfo__initialised', 'tag_error', 'rec_dates',
-                     'artist', 'title', 'album', 'year', 'genre', 'track',
-                     'comment', 'bitrate', 'format', 'copyright',
-                     'date_of_rec', 'enc_time', 'orig_rel_time', 'audio_delay',
-                     'rel_time', 'tag_time', 'encoder', 'lyricist', 'lyrics',
-                     'rec_time', 'rec_year', 'cont_gr_desc', 'track_number',
-                     'lang', 'length', 'tag_length', 'media_type', 'mood',
-                     'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
-                     'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
-                     'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm',
-                     'remixer', 'produced', 'publisher', 'album_artist',
-                     'rec_dates', 'radiost_name', 'radiost_owner',
-                     'url', 'buycd_url','author_url', 'audio_url',
-                     'radiost_url', 'audiosource_url', 'audiof_url',
-                     'composer', 'rating', 'f_type', 'encodedby',
-                     'enc_by', 'alb_sort_ord_key', 'perf_sort_ord_key',
-                     'title_sort_ord_key', 'isrc', 'enc_settings',
-                     'start_key', 'iTunes_comp_flag', 'set_subtitle',
-                     'disc_number', 'label', 'labelno', 'size', 'compilation',
-                     'subt_desc', 'channels', 'sample_rate', 'bps',
-                     'total_samples')
+        tag_names = (
+            '_MediaFileInfo__initialised', 'tag_error', 'rec_dates', 'artist', 
+            'title', 'album', 'year', 'genre', 'track', 'comment', 'bitrate', 
+            'format', 'copyright', 'date_of_rec', 'enc_time', 'orig_rel_time', 
+            'audio_delay', 'rel_time', 'tag_time', 'encoder', 'lyricist', 
+            'lyrics', 'rec_time', 'rec_year', 'cont_gr_desc', 'track_number', 
+            'lang', 'length', 'tag_length', 'media_type', 'mood', 
+            'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
+            'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
+            'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm', 'remixer', 
+            'produced', 'publisher', 'album_artist', 'rec_dates', 
+            'radiost_name', 'radiost_owner', 'url', 'buycd_url','author_url',
+            'audio_url', 'radiost_url', 'audiosource_url', 'audiof_url', 
+            'composer', 'rating', 'f_type', 'encodedby', 'enc_by', 
+            'alb_sort_ord_key', 'perf_sort_ord_key', 'title_sort_ord_key', 
+            'isrc', 'enc_settings', 'start_key', 'iTunes_comp_flag', 
+            'set_subtitle', 'disc_number', 'label', 'labelno', 'size', 
+            'compilation', 'subt_desc', 'channels', 'sample_rate', 'bps',
+            'total_samples')
 
         if item not in tag_names:
             raise AttributeError(item)

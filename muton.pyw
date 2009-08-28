@@ -20,6 +20,7 @@ pygtk.require('2.0')
 
 
 def _tag_export_execute(path_to_collection, path_to_output, resolution, format):
+    
     scanner = collection.MediaScanner()
     c = scanner.scan(unicode(path_to_collection))
     wr_output = outputter.ScannedInfoWriter(c)
@@ -46,7 +47,8 @@ def _tag_export_callback(option, opt, value, parser):
 
 
 class App:
-    """This class makes the GUI interface on the basis of the glade XML files"""
+    """This class makes the GUI interface on the basis of the glade XML files
+    """
     
     def __init__(self):
         #By now it's only for export, so the name is

@@ -134,17 +134,17 @@ class MediaScanner():
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info
 
-        flac_tags = {'artist': '', 'title': '', 'album': '', 'date': '',
-                    'genre': '', 'tracknumber': '', 'comment': '', 'rating': '',
-                    'composer': '', 'publisher': '', 'track': '', 'encoder': '',
-                    'originallyricist': '', 'origartist': '', 'copyright': '',
-                    'album artist': '', 'lyrics': '', 'lyricist': '',
-                    'labelno': '', 'encodedby': '', 'mood': '', 'copyright': '',
-                    'label': '', 'radiostationname': '', 'bpm': '',
-                    'ensemble': '', 'conductor': '', 'compilation': '',
-                    'isrc': '', 'discnumber': '', 'originalartist': '',
-                    'url': '', 'authorurl': '', 'radiostationurl': '',
-                    'audiosourceurl': '', 'buycdurl': '', 'audiofileurl': '',}
+        flac_tags = [
+            'artist', 'title', 'album', 'date', 'genre', 'tracknumber', 
+            'comment', 'rating', 'composer', 'publisher', 'track', 'encoder',
+            'originallyricist', 'origartist', 'copyright', 'album artist', 
+            'lyrics', 'lyricist', 'labelno', 'encodedby', 'mood', 'copyright', 
+            'label', 'radiostationname', 'bpm', 'ensemble', 'conductor', 
+            'compilation', 'isrc', 'discnumber', 'originalartist', 'url', 
+            'authorurl', 'radiostationurl', 'audiosourceurl', 'buycdurl', 
+            'audiofileurl',
+        ]
+        flac_tags = dict().fromkeys(flac_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
         for ft in flac_tags.keys():
@@ -205,17 +205,16 @@ class MediaScanner():
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info 
 
-        ape_tags = {'artist': '', 'title': '', 'album': '', 'year': '',
-                    'genre': '', 'track': '', 'comment': '',
-                    'rating': '', 'bpm': '', 'encoder': '',
-                    'lyrics': '', 'lyricist': '', 'originallyricist': '',
-                    'labelno': '', 'encodedby': '', 'mood': '', 'copyright': '',
-                    'album artist': '', 'label': '', 'radiostationname': '',
-                    'ensemble': '', 'conductor': '', 'compilation': '',
-                    'isrc': '', 'discnumber': '', 'originalartist': '',
-                    'url': '', 'authorurl': '', 'radiostationurl': '',
-                    'audiosourceurl': '', 'buycdurl': '', 'audiofileurl': '',
-                    'composer': ''}
+        ape_tags = [
+            'artist', 'title', 'album', 'year', 'genre', 'track', 'comment', 
+            'rating', 'bpm', 'encoder', 'lyrics', 'lyricist', 
+            'originallyricist', 'labelno', 'encodedby', 'mood', 'copyright', 
+            'album artist', 'label', 'radiostationname', 'ensemble', 
+            'conductor', 'compilation','isrc', 'discnumber', 'originalartist', 
+            'url', 'authorurl', 'radiostationurl', 'audiosourceurl', 
+            'buycdurl', 'audiofileurl', 'composer'
+        ]
+        ape_tags = dict().fromkeys(ape_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
         for at in ape_tags.keys():
@@ -269,20 +268,19 @@ class MediaScanner():
             media_info = "No Ogg tag found or %r is not a valid OGG file" % \
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info
-
-        ogg_tags = {'artist': '', 'title': '', 'album': '', 'year': '',
-                    'genre': '', 'tracknumber': '', 'comment': '',
-                    'composer': '', 'coverartmime': '', 'date': '',
-                    'rating': '', 'publisher': '', 'totaltracks': '',
-                    'lyrics': '', 'lyricist': '', 'originallyricist': '',
-                    'labelno': '', 'encodedby': '', 'mood': '', 'copyright': '',
-                    'label': '', 'radiostationname': '', 'bpm': '',
-                    'ensemble': '', 'conductor': '', 'compilation': '',
-                    'isrc': '', 'discnumber': '', 'originalartist': '',
-                    'origartist': '', 'album_artist': '', 'compilation': '',
-                    'url': '', 'authorurl': '', 'radiostationurl': '',
-                    'audiosourceurl': '', 'buycdurl': '', 'audiofileurl': '',
-                    'coverartmime': '', 'encoder': ''}
+        
+        ogg_tags = [
+            'artist', 'title', 'album', 'year', 'genre', 'tracknumber', 
+            'comment', 'composer', 'coverartmime', 'date', 'rating', 
+            'publisher', 'totaltracks', 'lyrics', 'lyricist', 
+            'originallyricist', 'labelno', 'encodedby', 'mood', 'copyright', 
+            'label', 'radiostationname', 'bpm', 'ensemble', 'conductor', 
+            'compilation', 'isrc', 'discnumber', 'originalartist', 
+            'origartist', 'album_artist', 'compilation', 'url', 'authorurl', 
+            'radiostationurl', 'audiosourceurl', 'buycdurl', 'audiofileurl', 
+            'coverartmime', 'encoder'
+        ]
+        ogg_tags = dict().fromkeys(ogg_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
         for ot in ogg_tags.keys():

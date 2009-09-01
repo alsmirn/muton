@@ -134,17 +134,16 @@ class MediaScanner():
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info
 
-        flac_tags = {'artist': '', 'title': '', 'album': '', 'date': '',
-                    'genre': '', 'tracknumber': '', 'comment': '', 'rating': '',
-                    'composer': '', 'publisher': '', 'track': '', 'encoder': '',
-                    'originallyricist': '', 'origartist': '', 'copyright': '',
-                    'album artist': '', 'lyrics': '', 'lyricist': '',
-                    'labelno': '', 'encodedby': '', 'mood': '', 'copyright': '',
-                    'label': '', 'radiostationname': '', 'bpm': '',
-                    'ensemble': '', 'conductor': '', 'compilation': '',
-                    'isrc': '', 'discnumber': '', 'originalartist': '',
-                    'url': '', 'authorurl': '', 'radiostationurl': '',
-                    'audiosourceurl': '', 'buycdurl': '', 'audiofileurl': '',}
+        flac_tags = [
+            'artist', 'title', 'album', 'date', 'genre', 'tracknumber', 
+            'comment', 'rating', 'composer', 'publisher', 'track', 'encoder',
+            'originallyricist', 'origartist', 'copyright', 'album artist', 
+            'lyrics', 'lyricist', 'labelno', 'encodedby', 'mood', 'copyright', 
+            'label', 'radiostationname', 'bpm', 'ensemble', 'conductor', 
+            'compilation', 'isrc', 'discnumber', 'originalartist', 'url', 
+            'authorurl', 'radiostationurl', 'audiosourceurl', 'buycdurl', 
+            'audiofileurl']
+        flac_tags = dict().fromkeys(flac_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
         for ft in flac_tags.keys():
@@ -205,17 +204,15 @@ class MediaScanner():
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info 
 
-        ape_tags = {'artist': '', 'title': '', 'album': '', 'year': '',
-                    'genre': '', 'track': '', 'comment': '',
-                    'rating': '', 'bpm': '', 'encoder': '',
-                    'lyrics': '', 'lyricist': '', 'originallyricist': '',
-                    'labelno': '', 'encodedby': '', 'mood': '', 'copyright': '',
-                    'album artist': '', 'label': '', 'radiostationname': '',
-                    'ensemble': '', 'conductor': '', 'compilation': '',
-                    'isrc': '', 'discnumber': '', 'originalartist': '',
-                    'url': '', 'authorurl': '', 'radiostationurl': '',
-                    'audiosourceurl': '', 'buycdurl': '', 'audiofileurl': '',
-                    'composer': ''}
+        ape_tags = [
+            'artist', 'title', 'album', 'year', 'genre', 'track', 'comment', 
+            'rating', 'bpm', 'encoder', 'lyrics', 'lyricist', 
+            'originallyricist', 'labelno', 'encodedby', 'mood', 'copyright', 
+            'album artist', 'label', 'radiostationname', 'ensemble', 
+            'conductor', 'compilation','isrc', 'discnumber', 'originalartist', 
+            'url', 'authorurl', 'radiostationurl', 'audiosourceurl', 
+            'buycdurl', 'audiofileurl', 'composer']
+        ape_tags = dict().fromkeys(ape_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
         for at in ape_tags.keys():
@@ -269,20 +266,18 @@ class MediaScanner():
             media_info = "No Ogg tag found or %r is not a valid OGG file" % \
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info
-
-        ogg_tags = {'artist': '', 'title': '', 'album': '', 'year': '',
-                    'genre': '', 'tracknumber': '', 'comment': '',
-                    'composer': '', 'coverartmime': '', 'date': '',
-                    'rating': '', 'publisher': '', 'totaltracks': '',
-                    'lyrics': '', 'lyricist': '', 'originallyricist': '',
-                    'labelno': '', 'encodedby': '', 'mood': '', 'copyright': '',
-                    'label': '', 'radiostationname': '', 'bpm': '',
-                    'ensemble': '', 'conductor': '', 'compilation': '',
-                    'isrc': '', 'discnumber': '', 'originalartist': '',
-                    'origartist': '', 'album_artist': '', 'compilation': '',
-                    'url': '', 'authorurl': '', 'radiostationurl': '',
-                    'audiosourceurl': '', 'buycdurl': '', 'audiofileurl': '',
-                    'coverartmime': '', 'encoder': ''}
+        
+        ogg_tags = [
+            'artist', 'title', 'album', 'year', 'genre', 'tracknumber', 
+            'comment', 'composer', 'coverartmime', 'date', 'rating', 
+            'publisher', 'totaltracks', 'lyrics', 'lyricist', 
+            'originallyricist', 'labelno', 'encodedby', 'mood', 'copyright', 
+            'label', 'radiostationname', 'bpm', 'ensemble', 'conductor', 
+            'compilation', 'isrc', 'discnumber', 'originalartist', 
+            'origartist', 'album_artist', 'compilation', 'url', 'authorurl', 
+            'radiostationurl', 'audiosourceurl', 'buycdurl', 'audiofileurl', 
+            'coverartmime', 'encoder']
+        ogg_tags = dict().fromkeys(ogg_tags, '')
 
         #Creating a dictionary with tag id as key and tags as value
         for ot in ogg_tags.keys():
@@ -370,27 +365,25 @@ class MediaFileInfo(dict):
     def __setattr__(self, item, value):
         """Maps attributes to values. Only if we are initialized."""
 
-        tag_names = ('_MediaFileInfo__initialised', 'tag_error', 'rec_dates',
-                     'artist', 'title', 'album', 'year', 'genre', 'track',
-                     'comment', 'bitrate', 'format', 'copyright',
-                     'date_of_rec', 'enc_time', 'orig_rel_time', 'audio_delay',
-                     'rel_time', 'tag_time', 'encoder', 'lyricist', 'lyrics',
-                     'rec_time', 'rec_year', 'cont_gr_desc', 'track_number',
-                     'lang', 'length', 'tag_length', 'media_type', 'mood',
-                     'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
-                     'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
-                     'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm',
-                     'remixer', 'produced', 'publisher', 'album_artist',
-                     'rec_dates', 'radiost_name', 'radiost_owner',
-                     'url', 'buycd_url','author_url', 'audio_url',
-                     'radiost_url', 'audiosource_url', 'audiof_url',
-                     'composer', 'rating', 'f_type', 'encodedby',
-                     'enc_by', 'alb_sort_ord_key', 'perf_sort_ord_key',
-                     'title_sort_ord_key', 'isrc', 'enc_settings',
-                     'start_key', 'iTunes_comp_flag', 'set_subtitle',
-                     'disc_number', 'label', 'labelno', 'size', 'compilation',
-                     'subt_desc', 'channels', 'sample_rate', 'bps',
-                     'total_samples')
+        tag_names = (
+            '_MediaFileInfo__initialised', 'tag_error', 'rec_dates', 'artist', 
+            'title', 'album', 'year', 'genre', 'track', 'comment', 'bitrate', 
+            'format', 'copyright', 'date_of_rec', 'enc_time', 'orig_rel_time', 
+            'audio_delay', 'rel_time', 'tag_time', 'encoder', 'lyricist', 
+            'lyrics', 'rec_time', 'rec_year', 'cont_gr_desc', 'track_number', 
+            'lang', 'length', 'tag_length', 'media_type', 'mood', 
+            'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
+            'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
+            'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm', 'remixer', 
+            'produced', 'publisher', 'album_artist', 'rec_dates', 
+            'radiost_name', 'radiost_owner', 'url', 'buycd_url','author_url',
+            'audio_url', 'radiost_url', 'audiosource_url', 'audiof_url', 
+            'composer', 'rating', 'f_type', 'encodedby', 'enc_by', 
+            'alb_sort_ord_key', 'perf_sort_ord_key', 'title_sort_ord_key', 
+            'isrc', 'enc_settings', 'start_key', 'iTunes_comp_flag', 
+            'set_subtitle', 'disc_number', 'label', 'labelno', 'size', 
+            'compilation', 'subt_desc', 'channels', 'sample_rate', 'bps',
+            'total_samples')
 
         if item not in tag_names:
             raise AttributeError(item)

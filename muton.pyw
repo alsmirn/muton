@@ -42,7 +42,7 @@ def _tag_export_callback(option, opt, value, parser):
     else:
         print 'Too much arguments to run export'
         print 'Note: additional parameters goes before main...'
-
+        
     return 1
 
 
@@ -79,27 +79,25 @@ class App:
 
 def _init_parser():
     parser = OptionParser(version="%prog 0.20090827",
-        usage="%prog [SECONDARY OPTIONS] (PRIMARY OPTIONS) ARGS\n"
+        usage="%prog [AUXILIARY OPTIONS] (OPTIONS) ARGS\n"
         "Usage note: without options and args start graphical interface")
 
-    primary_group = OptionGroup(parser, "PRIMARY OPTIONS")
-    secondary_group = OptionGroup(parser, "SECONDARY OPTIONS")
-
-    primary_group.add_option('-e', action='callback', 
+    parser.add_option('-e', action='callback', 
         callback=_tag_export_callback,
         help="exports info from tags to specified file in custom format.\n"
             "ARGS: path_to_collection path_to_output_file.fmt"),
     
-    secondary_group.add_option('--fmt', type='choice', dest='fmt', 
+    auxiliary_group = OptionGroup(parser, "AUXILIARY OPTIONS")
+    
+    auxiliary_group.add_option('--fmt', type='choice', dest='fmt', 
         default='xml', choices=['xml', 'csv'], 
         help='specifies format of output collection description'),
     #@TODO: using incrementation
-    secondary_group.add_option('--res', type='choice', dest='resolution', 
+    auxiliary_group.add_option('--res', type='choice', dest='resolution', 
         default='album', choices=['album', ],
         help='specifies resolution of output collection description'),
     
-    parser.add_option_group(primary_group)
-    parser.add_option_group(secondary_group)
+    parser.add_option_group(auxiliary_group)
     
     return parser
 

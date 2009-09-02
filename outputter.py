@@ -147,7 +147,7 @@ class ScannedInfoWriter():
                     piece = "\t<%s>%s</%s>\n" % (capitalized, checked, capitalized)
                     final_string.append(piece)
                 
-                self._fx.write("<AlbumInfo>\n%s</AlbumInfo>" % \
+                self._fx.write("<AlbumInfo>\n%s</AlbumInfo>\n" % \
                                 str().join(final_string))
                 
                 mark.append(v[output_mode])

@@ -18,16 +18,14 @@ import copy_pick
 
 pygtk.require('2.0')
 
-
 def _tag_export_execute(path_to_collection, path_to_output, resolution, format):
-    
+    time_beg = time.time()
     scanner = collection.MediaScanner()
     c = scanner.scan(unicode(path_to_collection))
     wr_output = outputter.ScannedInfoWriter(c)
     wr_output.write(path_to_output, resolution, format)
-    
+    print 'Tag export execution time %3.1f seconds.' % (time.time() - time_beg, )
     return 0
-
 
 def _tag_export_callback(option, opt, value, parser):
 

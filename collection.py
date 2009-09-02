@@ -56,6 +56,9 @@ class MediaScanner():
         #Creating a dictionary with path as key and tags as value
         for path in self._paths:
             lower_path = path.lower()
+            
+            if os.path.isdir(path):
+                continue
             if re.search('\.mp3' + '$', lower_path):
                 self.tag_info[path] = self.read_mp3_tag(path)
                 continue
@@ -79,10 +82,9 @@ class MediaScanner():
         try:
             mp3_audio = MP3(path) #Reading tags
         except mutagen.mp3.HeaderNotFoundError:
-#            media_info.album = str() #Don't know for what
-#            media_info.bitrate = int() #Don't know for what
-            media_info.tag_error = 'No MP3 tag found or %r is not a valid MP3 file' \
-            % (path.encode(sys.stdout.encoding or "utf-8"), )
+            media_info.tag_error = \
+                'No MP3 tag found or %r is not a valid MP3 file' % \
+                (path.encode(sys.stdout.encoding or "utf-8"), )
             return media_info
 
         #Initializing only those tags that are used in outputter
@@ -130,8 +132,8 @@ class MediaScanner():
         try:
             flac_audio = FLAC(path) #Reading tags
         except mutagen.flac.FLACNoHeaderError:
-            media_info = "%r is not a valid FLAC file" % \
-            (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
+            media_info.tag_error = "%r is not a valid FLAC file" % \
+                (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info
 
         flac_tags = [
@@ -200,8 +202,9 @@ class MediaScanner():
         try:
             ape_audio = APEv2(path) #Reading tags
         except mutagen.apev2.APENoHeaderError:
-            media_info = "No APE tag found or %r is not a valid APE file" % \
-            (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
+            media_info.tag_error = \
+                "No APE tag found or %r is not a valid APE file" % \
+                (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info 
 
         ape_tags = [
@@ -263,8 +266,9 @@ class MediaScanner():
         try:
             ogg_audio = OggVorbis(path) #Reading tags
         except:
-            media_info = "No Ogg tag found or %r is not a valid OGG file" % \
-            (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
+            media_info.tag_error = \
+                "No Ogg tag found or %r is not a valid OGG file" % \
+                (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return media_info
         
         ogg_tags = [
@@ -331,6 +335,56 @@ class MediaScanner():
         media_info.length = ogg_audio.info.length
 
         return media_info
+
+
+class MediaFileInfo2(object):
+    __slots__ = (
+            '_MediaFileInfo__initialised', 'tag_error', 'rec_dates', 'artist', 
+            'title', 'album', 'year', 'genre', 'track', 'comment', 'bitrate', 
+            'format', 'copyright', 'date_of_rec', 'enc_time', 'orig_rel_time', 
+            'audio_delay', 'rel_time', 'tag_time', 'encoder', 'lyricist', 
+            'lyrics', 'rec_time', 'rec_year', 'cont_gr_desc', 'track_number', 
+            'lang', 'length', 'tag_length', 'media_type', 'mood', 
+            'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
+            'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
+            'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm', 'remixer', 
+            'produced', 'publisher', 'album_artist', 'rec_dates', 
+            'radiost_name', 'radiost_owner', 'url', 'buycd_url','author_url',
+            'audio_url', 'radiost_url', 'audiosource_url', 'audiof_url', 
+            'composer', 'rating', 'f_type', 'encodedby', 'enc_by', 
+            'alb_sort_ord_key', 'perf_sort_ord_key', 'title_sort_ord_key', 
+            'isrc', 'enc_settings', 'start_key', 'iTunes_comp_flag', 
+            'set_subtitle', 'disc_number', 'label', 'labelno', 'size', 
+            'compilation', 'subt_desc', 'channels', 'sample_rate', 'bps',
+            'total_samples')
+    
+    def __init__(self, *args, **kwargs):
+        pass
+    
+    def get_tag(self, tag_name):
+        """simple getter by tag_name"""
+        if tag_name in self.__slots__:
+            try:        
+                return self.__getattribute__(tag_name)
+            except AttributeError:
+                return None
+        else:
+            raise Exception("Tag with name '%s' does not exist." % tag_name)
+    
+    def get_tags(self):
+        """return list of all possible tags"""
+        return self.__slots__
+    
+    def get_active_tags(self):
+        """return list of all initialized tags"""
+        actual_tags = {}
+        for tag in self.__slots__:
+            try:
+                actual_tags[tag] = self.__getattribute__(tag)
+            except AttributeError:
+                pass
+        return actual_tags
+
 
 class MediaFileInfo(dict):
     """

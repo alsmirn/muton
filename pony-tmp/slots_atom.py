@@ -5,37 +5,42 @@ Some experiments.
 """
 
 class MediaFileInfo2(object):
-    __slots__ = ('artist', 'title', 'album', 'year', 'genre', 'track', 
-                 'comment', 'bitrate', 'format', 'copyright',
-                 'date_of_rec', 'enc_time', 'orig_rel_time', 'audio_delay',
-                 'rel_time', 'tag_time', 'encoder', 'lyricist', 'lyrics',
-                 'rec_time', 'rec_year', 'cont_gr_desc', 'track_number',
-                 'lang', 'length', 'tag_length', 'media_type', 'mood',
-                 'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
-                 'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
-                 'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm',
-                 'remixer', 'produced', 'publisher', 'album_artist',
-                 'rec_dates', 'radiost_name', 'radiost_owner',
-                 'url', 'buycd_url','author_url', 'audio_url',
-                 'radiost_url', 'audiosource_url', 'audiof_url',
-                 'composer', 'rating', 'f_type', 'encodedby',
-                 'enc_by', 'alb_sort_ord_key', 'perf_sort_ord_key',
-                 'title_sort_ord_key', 'isrc', 'enc_settings',
-                 'start_key', 'iTunes_comp_flag', 'set_subtitle',
-                 'disc_number', 'label', 'labelno', 'size', 'compilation',
-                 'subt_desc', 'channels', 'sample_rate', 'bps', 
-                 'total_samples', 'tag_error', 'rec_dates')
-    
-    #for s in __slots__: eval("%s = ''" % (s,))
-    #eval("artist = ''")
-    #artist = 'a'
+    __slots__ = (
+            'tag_error', 'rec_dates', 'artist', 
+            'total_samples')
     
     def __init__(self, *args, **kwargs):
         pass
+
+    def get_tags(self):
+        """return list of all possible tags"""
+        return self.__slots__
+    
+    def get_actual_tags(self):
+        """return list of all initialized tags"""
+        actual_tags = {}
+        for tag in self.__slots__:
+            try:
+                actual_tags[tag] = self.__getattribute__(tag)
+            except AttributeError:
+                pass
+        return actual_tags
+    
+    def get_tag(self, tag_name):
+        """simple getter by tag_name"""
+        try:        
+            return self.__getattribute__(tag_name)
+        except AttributeError:
+            raise Exception("Tag with name '%s' does not exist." % tag_name)
+            
         
 instance = MediaFileInfo2()
-#print dir(instance)
 instance.artist = 'b'
 print instance.artist
+print instance.get_tags()
 
-instance.z = 22434
+print instance.get_tag('artis')
+print instance.get_actual_tags()
+#print dir(instance.__slots__)
+
+#print instance.__getattribute__('artist')

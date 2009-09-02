@@ -26,25 +26,27 @@ class ScannedInfoWriter():
                     alb_size += float(os.path.getsize(path)) / 1048576
                 self._alb_size_dict[alb] = ['%4.2f' % alb_size]
 
-
-    def write(self, out_path, output_mode, format):
+    def write(self, out_path, output_mode, extension):
+        fmt = "%s.%s"
         output_name = 'output'
-        if format == 'csv':
-            output_csv = out_path + (output_name + '.csv')
-            self.make_excel_CSV(output_mode, output_csv)
-        if format == 'xml':
-            output_xml = out_path + (output_name + '.xml')
-            self.make_XML(output_mode, output_xml)
+        
+        out_filepath = os.path.join(out_path, fmt % (output_name, extension))
+        
+        if extension == 'csv':
+            self.make_excel_CSV(output_mode, out_filepath)
+        elif extension == 'xml':
+            self.make_XML(output_mode, out_filepath)
 
     def make_excel_CSV(self, output_mode, output_csv):
         self.scan_alb_size()
         mark = [] #List of albums for checking of uniqueness
+        #@todo why this encoding? utf-16le
         f = codecs.open(output_csv, encoding='utf-16le', mode='w+')
         f.write('"Artist";"Album";"Year";"Genre";"Bitrate";"Format";"Size";"Comment"' + '\n')
         for path, v in self.collection.items():
             try:
                 if str(v['bitrate']) not in self._bitr_samples:
-                    v['bitrate'] = 'VBR ' + str(v['bitrate'])
+                    v['bitrate'] = 'VBR %s' % str(v['bitrate'])
                 if output_mode == 'album':
                     if v['album'] not in mark:
                         str_to_write = 8 * '"%s";' % \
@@ -120,7 +122,7 @@ class ScannedInfoWriter():
 
                 # notation that bitrate is VBR
                 if str(v['bitrate']) not in self._bitr_samples:
-                    v['bitrate'] = 'VBR ' + str(v['bitrate'])
+                    v['bitrate'] = 'VBR %s' % str(v['bitrate'])
                 
                 # tags to write
                 xml_tags_list = ('artist', 'album', 'year', 'genre', 

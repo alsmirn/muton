@@ -9,7 +9,7 @@ class ScannedInfoWriter():
         self.collection = collection
         self._alb_size_dict = {}
         #Format of variable bitrate output
-        self._bitr_samples = ['', '128', '160', '192', '256', '320']
+        self._bitr_samples = ('', '128', '160', '192', '256', '320')
 
     def scan_alb_size(self):
         """"Counts size of each album - for each tag type 'album' """
@@ -36,11 +36,12 @@ class ScannedInfoWriter():
             self.make_excel_CSV(output_mode, out_filepath)
         elif extension == 'xml':
             self.make_XML(output_mode, out_filepath)
-
+    
+    #@todo: rewrite using standard lib: http://docs.python.org/library/csv.html
     def make_excel_CSV(self, output_mode, output_csv):
         self.scan_alb_size()
         mark = [] #List of albums for checking of uniqueness
-        #@todo why this encoding? utf-16le
+        #@todo: why this encoding? utf-16le
         f = codecs.open(output_csv, encoding='utf-16le', mode='w+')
         f.write('"Artist";"Album";"Year";"Genre";"Bitrate";"Format";"Size";"Comment"' + '\n')
         for path, v in self.collection.items():

@@ -138,8 +138,9 @@ class ScannedInfoWriter():
                         checked = v['year'][0:4]
                     else:
                         checked = v[tag]
-                        if checked is str():
-                            checked = escape(v[tag])
+                                               
+                        if isinstance(checked, str):
+                            checked = escape(v[tag])                            
                         else:
                             checked = str(checked)
 

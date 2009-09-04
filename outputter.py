@@ -1,4 +1,5 @@
 import os
+import csv
 import codecs
 from xml.sax.saxutils import escape
 
@@ -33,40 +34,50 @@ class ScannedInfoWriter():
         out_filepath = os.path.join(out_path, fmt % (output_name, extension))
         
         if extension == 'csv':
-            self.make_excel_CSV(output_mode, out_filepath)
+            self.make_CSV(output_mode, out_filepath)
+            #self.make_excel_CSV(output_mode, out_filepath)
         elif extension == 'xml':
             self.make_XML(output_mode, out_filepath)
     
-    #@todo: rewrite using standard lib: http://docs.python.org/library/csv.html
-    def make_excel_CSV(self, output_mode, output_csv):
+    def make_CSV(self, output_mode, output_csv):
         self.scan_alb_size()
         mark = [] #List of albums for checking of uniqueness
-        #@todo: why this encoding? utf-16le
-        f = codecs.open(output_csv, encoding='utf-16le', mode='w+')
-        f.write('"Artist";"Album";"Year";"Genre";"Bitrate";"Format";"Size";"Comment"' + '\n')
+    
+        col_titles = (
+            'artist', 'album', 'year', 'genre', 
+            'bitrate', 'format', 'size', 'comment')
+    
+        output_descriptor = open(output_csv, 'w')
+        collection_description = csv.writer(output_descriptor, 
+                                            delimiter=';', 
+                                            quoting=csv.QUOTE_MINIMAL)
+        collection_description.writerow([ct.capitalize() for ct in col_titles])
+    
         for path, v in self.collection.items():
             try:
                 if str(v['bitrate']) not in self._bitr_samples:
                     v['bitrate'] = 'VBR %s' % str(v['bitrate'])
                 if output_mode == 'album':
-                    if v['album'] not in mark:
-                        str_to_write = 8 * '"%s";' % \
-                        (v['artist'], v['album'],
-                         v['year'][0:4], v['genre'], v['bitrate'],
-                         v['format'], self._alb_size_dict[v['album']][0],
-                         v['comment'])
-                        f.write(str_to_write.decode('utf-8') + '\n')
+                    if v['album'] in mark:
+                        continue
+                    else:
+                        row = [
+                            v['artist'], v['album'], v['year'][0:4], 
+                            v['genre'], v['bitrate'], v['format'], 
+                            self._alb_size_dict[v['album']][0], v['comment']]
+                        collection_description.writerow(row)
                         mark.append(v['album'])
                 else:
-                    str_to_write = (6 * '"%s";' + '%4.2f' + ';' + '"%s";' + '\n') % \
-                    (v['artist'], v['album'], v['year'][0:4],
-                     v['genre'], v['bitrate'], v['format'],
-                     (float(os.path.getsize(path))/1048576), v['comment'])
-                    f.write(str_to_write.decode('utf-8'))
+                    row = [
+                        v['artist'], v['album'], v['year'][0:4],
+                        v['genre'], v['bitrate'], v['format'],
+                        float(os.path.getsize(path))/1048576, v['comment']]
+                    collection_description.writerow(row)
             except TypeError:
                 print "%r is not a valid audio file" % (path, )
                 return
-        f.close()
+
+        output_descriptor.close()
     
     #@TODO: rewrite function using dom.minidom
     #@TODO: make output sorted by artist
@@ -138,7 +149,6 @@ class ScannedInfoWriter():
                         checked = v['year'][0:4]
                     else:
                         checked = v[tag]
-                                               
                         if isinstance(checked, str):
                             checked = escape(v[tag])                            
                         else:

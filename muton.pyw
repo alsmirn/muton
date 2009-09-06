@@ -18,12 +18,12 @@ import copy_pick
 
 pygtk.require('2.0')
 
-def _tag_export_execute(path_to_collection, path_to_output, resolution, format):
+def _tag_export_execute(path_to_collection, path_to_output, grouping, format):
     time_beg = time.time()
     scanner = collection.MediaScanner()
     c = scanner.scan(unicode(path_to_collection))
     wr_output = outputter.ScannedInfoWriter(c)
-    wr_output.write(path_to_output, resolution, format)
+    wr_output.write(path_to_output, grouping, format)
     print 'Tag export execution time %3.1f seconds.' % (time.time() - time_beg, )
     return 0
 
@@ -34,7 +34,7 @@ def _tag_export_callback(option, opt, value, parser):
 
     if len(parser.rargs) == required_args_num:
         return _tag_export_execute(parser.rargs[0], parser.rargs[1], 
-            parser.values.resolution, parser.values.fmt)
+            parser.values.grouping, parser.values.fmt)
     elif len(parser.rargs) < required_args_num:
         print 'Not enough arguments to run export'
     else:
@@ -54,7 +54,7 @@ class App:
         #Parsing the glade xml file
         self.wTree = gtk.glade.XML(self.main_xml)       
         #Dictionary for the export button action
-        dic = {"exp_click" : self.export,}
+        dic = {"exp_click" : self.export}
 
         self.wTree.signal_autoconnect(dic)
         #Making close equal to destroy
@@ -67,15 +67,17 @@ class App:
         #Getting values from text fields 
         path = self.wTree.get_widget('path_entry').get_text()
         out_path = self.wTree.get_widget('out_path_entry').get_text()
-        format = self.wTree.get_widget('format').get_active_text().lower()
+        extension = self.wTree.get_widget('format').get_active_text().lower()
+        grouping = self.wTree.get_widget('grouping').get_text().lower()
         #Executing export
-        _tag_export_execute(path, out_path, 'album', format)
+        _tag_export_execute(path, out_path, grouping, extension)
         
     def close_app(self, widget):    
         gtk.main_quit()    
 
 
 def _init_parser():
+    #@TODO: catch exception when user instead of folder name specifies filename 
     parser = OptionParser(version="%prog 0.20090827",
         usage="%prog [AUXILIARY OPTIONS] (OPTIONS) ARGS\n"
         "Usage note: without options and args start graphical interface")
@@ -91,9 +93,9 @@ def _init_parser():
         default='xml', choices=['xml', 'csv'], 
         help='specifies format of output collection description'),
     #@TODO: using incrementation
-    auxiliary_group.add_option('--res', type='choice', dest='resolution', 
+    auxiliary_group.add_option('--res', type='choice', dest='grouping', 
         default='album', choices=['album', ],
-        help='specifies resolution of output collection description'),
+        help='specifies grouping of output collection description'),
     
     parser.add_option_group(auxiliary_group)
     

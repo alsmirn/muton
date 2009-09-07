@@ -1,6 +1,5 @@
 import os
 import csv
-import codecs
 from xml.sax.saxutils import escape
 
 class ScannedInfoWriter():

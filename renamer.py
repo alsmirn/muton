@@ -1,7 +1,4 @@
-import re
 import os
-import sys
-import codecs
 
 class Renamer():
     def __init__(self, collection):
@@ -26,7 +23,7 @@ class Renamer():
             self.ren_sample + os.path.splitext(path)[1])
         try:
             os.rename(path, new_name)
-        except WindowsError:
+        except OSError:
             print 'The filename, directory name, or volume label syntax is incorrect', \
                 path
 
@@ -50,7 +47,7 @@ class Renamer():
         tag_items[track_tag_name] = track_number
         
         #Filling tag_items from file
-        for item in tag_items_tuple:
+        for item in tag_items_names:
             tag_items[item] = key[item]
         
         #Replacing list's items by tag info

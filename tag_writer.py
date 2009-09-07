@@ -1,4 +1,3 @@
-import os
 import sys
 import re
 
@@ -6,12 +5,8 @@ import mutagen
 from mutagen.flac import FLAC
 from mutagen.apev2 import APEv2
 from mutagen.oggvorbis import OggVorbis
-from mutagen.id3 import (ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TCOP,
-                        TPOS, TEXT, TENC, TSRC, TBPM, TPE3, TPUB, TMOO, TOPE, 
-                        TOLY, TOAL, TOFN, TORY, TOWN, TPE2, TPE4, TPRO, TRSN,
-                        TRSO, TSIZ, TSOA, TSOP, TSOT, TSSE, TSST, TRDA, TFLT,
-                        TIME, TIT1, TIT3, TKEY, TLAN, TLEN, TMED, TDAT,
-                        TDEN, TDOR, TDLY, TDRL, TDTG, TYER, USLT, WXXX, APIC)
+from mutagen.id3 import (ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TPOS, 
+                         TPUB,  USLT, WXXX, APIC)
 
 class TagWriteManager():
 

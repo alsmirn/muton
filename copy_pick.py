@@ -26,7 +26,7 @@ class FileCopierBySign():
             #Creates for each artist and album separate folder and copies
             #files to them
             try:
-                tmp_var = self._TAGS_TO_CLEAN[0]
+                self._TAGS_TO_CLEAN[0]
             except TypeError:
                 print ("%r is not a valid audio file") % (curr_f_path, )
 

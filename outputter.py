@@ -26,19 +26,22 @@ class ScannedInfoWriter():
                     alb_size += float(os.path.getsize(path)) / 1048576
                 self._alb_size_dict[alb] = ['%4.2f' % alb_size]
 
-    def write(self, out_path, output_mode, extension):
+    def write(self, out_path, grouping, extension):
+        #output_mode - type of grouping, i.e. by album, by artist or no
+        #extension = format of export file, i.e. CSV or XML by now
+        
         fmt = "%s.%s"
         output_name = 'output'
         
         out_filepath = os.path.join(out_path, fmt % (output_name, extension))
         
         if extension == 'csv':
-            self.make_CSV(output_mode, out_filepath)
-            #self.make_excel_CSV(output_mode, out_filepath)
+            self.make_CSV(grouping, out_filepath)
+            #self.make_excel_CSV(grouping, out_filepath)
         elif extension == 'xml':
-            self.make_XML(output_mode, out_filepath)
+            self.make_XML(grouping, out_filepath)
     
-    def make_CSV(self, output_mode, output_csv):
+    def make_CSV(self, grouping, output_csv):
         self.scan_alb_size()
         mark = [] #List of albums for checking of uniqueness
     
@@ -52,25 +55,26 @@ class ScannedInfoWriter():
                                             quoting=csv.QUOTE_MINIMAL)
         collection_description.writerow([ct.capitalize() for ct in col_titles])
     
-        for path, v in self.collection.items():
+        for path, tags in self.collection.items():
             try:
-                if str(v['bitrate']) not in self._bitr_samples:
-                    v['bitrate'] = 'VBR %s' % str(v['bitrate'])
-                if output_mode == 'album':
-                    if v['album'] in mark:
+                if str(tags['bitrate']) not in self._bitr_samples:
+                    tags['bitrate'] = 'VBR %s' % str(tags['bitrate'])
+                if grouping == 'album':
+                    if tags['album'] in mark:
                         continue
                     else:
                         row = [
-                            v['artist'], v['album'], v['year'][0:4], 
-                            v['genre'], v['bitrate'], v['format'], 
-                            self._alb_size_dict[v['album']][0], v['comment']]
+                            tags['artist'], tags['album'], tags['year'][0:4], 
+                            tags['genre'], tags['bitrate'], tags['format'], 
+                            self._alb_size_dict[tags['album']][0], \
+                            tags['comment']]
                         collection_description.writerow(row)
-                        mark.append(v['album'])
+                        mark.append(tags['album'])
                 else:
                     row = [
-                        v['artist'], v['album'], v['year'][0:4],
-                        v['genre'], v['bitrate'], v['format'],
-                        float(os.path.getsize(path))/1048576, v['comment']]
+                        tags['artist'], tags['album'], tags['year'][0:4],
+                        tags['genre'], tags['bitrate'], tags['format'],
+                        float(os.path.getsize(path))/1048576, tags['comment']]
                     collection_description.writerow(row)
             except TypeError:
                 print "%r is not a valid audio file" % (path, )
@@ -80,17 +84,17 @@ class ScannedInfoWriter():
     
     #@TODO: rewrite function using dom.minidom
     #@TODO: make output sorted by artist
-    def make_XML(self, output_mode, output_xml):
+    def make_XML(self, grouping, output_xml):
         """Returns XML with all pattern info (for example - album info)."""
 
         self._fx = open(output_xml, "w")
         self._fx.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         self._fx.write("<MediaInfo>\n")
 
-        if output_mode == 'single':
+        if grouping == 'single':
             self.write_single_XML()
         else:
-            self.write_group_XML(output_mode)
+            self.write_group_XML(grouping)
 
         self._fx.write("\n</MediaInfo>")
         self._fx.close()
@@ -124,12 +128,12 @@ class ScannedInfoWriter():
                            if 'comment' in tags else str(),)
             self._fx.write("</FileInfo>")
             
-    def write_group_XML(self, output_mode):
+    def write_group_XML(self, grouping):
         self.scan_alb_size()
         mark = [] #List of tags for checking the uniqueness
         #output_mode for this method can be any tag ('album', 'year' etc.)
         for path, v in self.collection.items():
-            if output_mode in v and v[output_mode] not in mark:
+            if grouping in v and v[grouping] not in mark:
 
                 # notation that bitrate is VBR
                 if str(v['bitrate']) not in self._bitr_samples:
@@ -161,4 +165,4 @@ class ScannedInfoWriter():
                 self._fx.write("<AlbumInfo>\n%s</AlbumInfo>\n" % \
                                 str().join(final_string))
                 
-                mark.append(v[output_mode])
+                mark.append(v[grouping])

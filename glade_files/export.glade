@@ -69,13 +69,33 @@
           </packing>
         </child>
         <child>
+          <widget class="GtkLabel" id="label5">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&#x423;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x442;&#x435;&#x433; &#x434;&#x43B;&#x44F; &#x433;&#x440;&#x443;&#x43F;&#x43F;&#x438;&#x440;&#x43E;&#x432;&#x43A;&#x438;:</property>
+          </widget>
+          <packing>
+            <property name="position">6</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="grouping">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="invisible_char">&#x25CF;</property>
+            <property name="text" translatable="yes">album</property>
+          </widget>
+          <packing>
+            <property name="position">7</property>
+          </packing>
+        </child>
+        <child>
           <widget class="GtkLabel" id="label4">
             <property name="visible">True</property>
             <property name="label" translatable="yes">&#x423;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x444;&#x43E;&#x440;&#x43C;&#x430;&#x442; &#x444;&#x430;&#x439;&#x43B;&#x430; &#x44D;&#x43A;&#x441;&#x43F;&#x43E;&#x440;&#x442;&#x430;:</property>
           </widget>
           <packing>
             <property name="fill">False</property>
-            <property name="position">6</property>
+            <property name="position">8</property>
           </packing>
         </child>
         <child>
@@ -90,7 +110,7 @@ CVS</property>
           <packing>
             <property name="fill">False</property>
             <property name="padding">12</property>
-            <property name="position">7</property>
+            <property name="position">9</property>
           </packing>
         </child>
         <child internal-child="action_area">
@@ -113,7 +133,7 @@ CVS</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button2">
+              <widget class="GtkButton" id="quit">
                 <property name="label">gtk-quit</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>

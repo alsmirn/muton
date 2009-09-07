@@ -32,7 +32,6 @@ class ScannedInfoWriter():
         
         fmt = "%s.%s"
         output_name = 'output'
-        
         out_filepath = os.path.join(out_path, fmt % (output_name, extension))
         
         if extension == 'csv':

@@ -59,23 +59,23 @@ class ScannedInfoWriter():
             try:
                 if str(tags['bitrate']) not in self._bitr_samples:
                     tags['bitrate'] = 'VBR %s' % str(tags['bitrate'])
+                
+                field_to_append = 0
+                                
                 if grouping == 'album':
-                    if tags['album'] in mark:
-                        continue
-                    else:
-                        row = [
-                            tags['artist'], tags['album'], tags['year'][0:4], 
-                            tags['genre'], tags['bitrate'], tags['format'], 
-                            self._alb_size_dict[tags['album']][0], \
-                            tags['comment']]
-                        collection_description.writerow(row)
+                    if tags['album'] not in mark:
                         mark.append(tags['album'])
+                    else:
+                        continue
+                    field_to_append = self._alb_size_dict[tags['album']][0]
                 else:
-                    row = [
-                        tags['artist'], tags['album'], tags['year'][0:4],
-                        tags['genre'], tags['bitrate'], tags['format'],
-                        float(os.path.getsize(path))/1048576, tags['comment']]
-                    collection_description.writerow(row)
+                    field_to_append = float(os.path.getsize(path))/1048576
+                
+                row = [tags['artist'], tags['album'], tags['year'][0:4], 
+                       tags['genre'], tags['bitrate'], tags['format'],
+                       field_to_append, tags['comment']]
+                collection_description.writerow(row)
+                
             except TypeError:
                 print "%r is not a valid audio file" % (path, )
                 return

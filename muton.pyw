@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-import os
 import sys
 import time
-import getopt
-from optparse import Option, OptionGroup, OptionParser
+from optparse import OptionGroup, OptionParser
 
 import gtk
 import pygtk

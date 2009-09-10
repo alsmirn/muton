@@ -1,6 +1,5 @@
 import os
 import csv
-import codecs
 from xml.sax.saxutils import escape
 
 class ScannedInfoWriter():
@@ -24,7 +23,7 @@ class ScannedInfoWriter():
             alb_size = 0
             for path, v in self.collection.items():
                 if 'album' in v and v['album'] == alb:
-                    alb_size += float(os.path.getsize(path)) / 1048576
+                    alb_size += float(os.path.getsize(path)) / (1<<20)
                 self._alb_size_dict[alb] = ['%4.2f' % alb_size]
 
     def write(self, out_path, grouping, extension):
@@ -33,22 +32,20 @@ class ScannedInfoWriter():
         
         fmt = "%s.%s"
         output_name = 'output'
-        
         out_filepath = os.path.join(out_path, fmt % (output_name, extension))
         
         if extension == 'csv':
             self.make_CSV(grouping, out_filepath)
-            #self.make_excel_CSV(grouping, out_filepath)
         elif extension == 'xml':
             self.make_XML(grouping, out_filepath)
     
     def make_CSV(self, grouping, output_csv):
-        self.scan_alb_size()
-        mark = [] #List of albums for checking of uniqueness
     
-        col_titles = (
-            'artist', 'album', 'year', 'genre', 
-            'bitrate', 'format', 'size', 'comment')
+        mark = [] #List of albums for checking of uniqueness
+        col_titles = ('artist', 'album', 'year', 'genre', 
+                      'bitrate', 'format', 'size', 'comment')
+        
+        self.scan_alb_size()
     
         output_descriptor = open(output_csv, 'w')
         collection_description = csv.writer(output_descriptor, 
@@ -57,29 +54,29 @@ class ScannedInfoWriter():
         collection_description.writerow([ct.capitalize() for ct in col_titles])
     
         for path, tags in self.collection.items():
-            try:
-                if str(tags['bitrate']) not in self._bitr_samples:
-                    tags['bitrate'] = 'VBR %s' % str(tags['bitrate'])
-                if grouping == 'album':
-                    if tags['album'] in mark:
-                        continue
-                    else:
-                        row = [
-                            tags['artist'], tags['album'], tags['year'][0:4], 
-                            tags['genre'], tags['bitrate'], tags['format'], 
-                            self._alb_size_dict[tags['album']][0], \
-                            tags['comment']]
-                        collection_description.writerow(row)
-                        mark.append(tags['album'])
-                else:
-                    row = [
-                        tags['artist'], tags['album'], tags['year'][0:4],
-                        tags['genre'], tags['bitrate'], tags['format'],
-                        float(os.path.getsize(path))/1048576, tags['comment']]
-                    collection_description.writerow(row)
-            except TypeError:
-                print "%r is not a valid audio file" % (path, )
-                return
+            
+            if 'tag_error' in tags:
+                continue
+            
+            field_to_append = 0
+            album_name = tags['album']
+
+            if str(tags['bitrate']) not in self._bitr_samples:
+                tags['bitrate'] = 'VBR %s' % str(tags['bitrate'])
+            
+            if grouping == 'album':
+                if album_name not in mark:
+                    mark.append(album_name)
+                    field_to_append = self._alb_size_dict[album_name][0]
+                else: 
+                    continue
+            else:
+                field_to_append = float(os.path.getsize(path))/(1<<20)
+                    
+            row = [tags['artist'], tags['album'], tags['year'][0:4], 
+                   tags['genre'], tags['bitrate'], tags['format'],
+                   field_to_append, tags['comment']]
+            collection_description.writerow(row)
 
         output_descriptor.close()
     

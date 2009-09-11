@@ -59,16 +59,16 @@ class MediaScanner():
             
             if os.path.isdir(path):
                 continue
-            if re.search('\.mp3' + '$', lower_path):
+            if lower_path.endswith(".mp3"):
                 self.tag_info[path] = self.read_mp3_tag(path)
                 continue
-            if re.search('\.flac' + '$', lower_path):
+            if lower_path.endswith(".flac"):
                 self.tag_info[path] = self.read_flac_tag(path)
                 continue
-            if re.search('\.ape' + '$', lower_path):
+            if lower_path.endswith(".ape"):
                 self.tag_info[path] = self.read_ape_tag(path)
                 continue
-            if re.search('\.ogg' + '$', lower_path):
+            if lower_path.endswith(".ogg"):
                 self.tag_info[path] = self.read_ogg_tag(path)
                 continue
 

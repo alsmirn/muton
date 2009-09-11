@@ -33,16 +33,16 @@ class MediaScanner():
 
         @param dirpath: input dirpath
         """
-        ext_list = '.mp3', '.ape', '.ogg', '.flac'
+        ext_list = ('.mp3', '.ape', '.ogg', '.flac')
         file_list = os.listdir(path)
 
         #Scanning the whole contents of the folder
         allpaths = [os.path.join(path, name) for name in file_list \
-        if name[-4:].lower() in ext_list or name[-5:].lower() == '.flac']
+                    if ".%s" % name.split(".")[-1].lower() in ext_list]
 
         #Selecting only folders
         subdirs_paths = [os.path.join(path, name) for name in file_list \
-               if os.path.isdir(os.path.join(path, name))]
+                         if os.path.isdir(os.path.join(path, name))]
 
         #Adding to the list of the paths
         self._paths.extend(allpaths)

@@ -8,6 +8,7 @@ class ScannedInfoWriter():
     def __init__(self, collection):
         self.collection = collection
         self._alb_size_dict = {}
+        
         #Format of variable bitrate output
         self._bitr_samples = ('', '128', '160', '192', '256', '320')
 
@@ -27,8 +28,10 @@ class ScannedInfoWriter():
                 self._alb_size_dict[alb] = ['%4.2f' % alb_size]
 
     def write(self, out_path, grouping, extension):
-        #output_mode - type of grouping, i.e. by album, by artist or no
-        #extension = format of export file, i.e. CSV or XML by now
+        """
+        @param output_mode: type of grouping, i.e. by album, by artist or no
+        @param extension: format of export file, i.e. CSV or XML by now
+        """
         
         fmt = "%s.%s"
         output_name = 'output'

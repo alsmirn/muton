@@ -149,9 +149,9 @@ class MediaScanner():
 
         #Creating a dictionary with tag id as key and tags as value
         for ft in flac_tags.keys():
-            try:
+            if ft in flac_audio:
                 flac_tags[ft] = flac_audio[ft][0].encode('utf-8')
-            except KeyError:
+            else:
                 flac_tags[ft] = ''
 
         media_info.artist            = flac_tags['artist']
@@ -219,9 +219,9 @@ class MediaScanner():
 
         #Creating a dictionary with tag id as key and tags as value
         for at in ape_tags.keys():
-            try:
+            if at in ape_audio:
                 ape_tags[at] = ape_audio[at][0].encode('utf-8')
-            except KeyError:
+            else:
                 ape_tags[at] = ''
 
         media_info.artist            = ape_tags['artist']
@@ -259,6 +259,7 @@ class MediaScanner():
 
         return media_info
 
+
     def read_ogg_tag(self, path):
         """Returns ape file info."""
 
@@ -285,9 +286,9 @@ class MediaScanner():
 
         #Creating a dictionary with tag id as key and tags as value
         for ot in ogg_tags.keys():
-            try:
+            if ot in ogg_audio:
                 ogg_tags[ot] = ogg_audio[ot][0].encode('utf-8')
-            except KeyError:
+            else:
                 ogg_tags[ot] = ''
 
         media_info.artist            = ogg_tags['artist']

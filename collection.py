@@ -38,7 +38,7 @@ class MediaScanner():
 
         #Scanning the whole contents of the folder
         allpaths = [os.path.join(path, name) for name in file_list \
-                    if ".%s" % name.split(".")[-1].lower() in ext_list]
+                    if ".%s" % name.lower().split(".")[-1] in ext_list]
 
         #Selecting only folders
         subdirs_paths = [os.path.join(path, name) for name in file_list \
@@ -107,13 +107,13 @@ class MediaScanner():
         bad_comms = "COMM:ID3v1:'eng'", "COMM:\x01:'\\x00\\x00Z'"
 
         for key in mp3_audio.keys():
-            if not re.search('iTun', key) and key not in bad_comms \
-            and re.match('COMM:', key):
+            #@TODO: WHY? need some comment!
+            if 'iTun' not in key and key not in bad_comms and 'COMM:' in key:
                 media_info.comment = str(mp3_audio[key])
 
         #There can be infinite numbers of url tags, so we can read any
         for key in mp3_audio.keys():
-            if re.match('WXXX:', key):
+            if 'WXXX:' in key:
                 media_info.url = str(mp3_audio[key])
 
         media_info.format = 'mp3'

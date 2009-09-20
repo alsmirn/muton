@@ -52,25 +52,21 @@ class MediaScanner():
             self.scan_fs(subdir)
 
     def read_tags(self):
-
         #Creating a dictionary with path as key and tags as value
         for path in self._paths:
             lower_path = path.lower()
             
             if os.path.isdir(path):
                 continue
+            
             if lower_path.endswith(".mp3"):
                 self.tag_info[path] = self.read_mp3_tag(path)
-                continue
-            if lower_path.endswith(".flac"):
+            elif lower_path.endswith(".flac"):
                 self.tag_info[path] = self.read_flac_tag(path)
-                continue
-            if lower_path.endswith(".ape"):
+            elif lower_path.endswith(".ape"):
                 self.tag_info[path] = self.read_ape_tag(path)
-                continue
-            if lower_path.endswith(".ogg"):
+            elif lower_path.endswith(".ogg"):
                 self.tag_info[path] = self.read_ogg_tag(path)
-                continue
 
     def read_mp3_tag(self, path):
         """

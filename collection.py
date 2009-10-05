@@ -61,12 +61,12 @@ class MediaScanner():
             
             if lower_path.endswith(".mp3"):
                 self.tag_info[path] = self.read_mp3_tag(path)
-            elif lower_path.endswith(".flac"):
-                self.tag_info[path] = self.read_flac_tag(path)
-            elif lower_path.endswith(".ape"):
-                self.tag_info[path] = self.read_ape_tag(path)
-            elif lower_path.endswith(".ogg"):
-                self.tag_info[path] = self.read_ogg_tag(path)
+#            elif lower_path.endswith(".flac"):
+#                self.tag_info[path] = self.read_flac_tag(path)
+#            elif lower_path.endswith(".ape"):
+#                self.tag_info[path] = self.read_ape_tag(path)
+#            elif lower_path.endswith(".ogg"):
+#                self.tag_info[path] = self.read_ogg_tag(path)
 
     def read_mp3_tag(self, path):
         """
@@ -124,8 +124,6 @@ class MediaScanner():
 
         media_info.format = 'mp3'
         media_info.bitrate = mp3_audio.info.bitrate/1000
-        media_info.length = mp3_audio.info.length
-        media_info.sample_rate = mp3_audio.info.sample_rate
 
         return media_info
 

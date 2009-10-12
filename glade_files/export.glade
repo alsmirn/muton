@@ -105,7 +105,7 @@
             <property name="active">1</property>
             <property name="add_tearoffs">True</property>
             <property name="items" translatable="yes">XML
-CVS</property>
+CSV</property>
           </widget>
           <packing>
             <property name="fill">False</property>

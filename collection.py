@@ -61,12 +61,12 @@ class MediaScanner():
             
             if lower_path.endswith(".mp3"):
                 self.tag_info[path] = self.read_mp3_tag(path)
-            elif lower_path.endswith(".flac"):
-                self.tag_info[path] = self.read_flac_tag(path)
-            elif lower_path.endswith(".ape"):
-                self.tag_info[path] = self.read_ape_tag(path)
-            elif lower_path.endswith(".ogg"):
-                self.tag_info[path] = self.read_ogg_tag(path)
+#            elif lower_path.endswith(".flac"):
+#                self.tag_info[path] = self.read_flac_tag(path)
+#            elif lower_path.endswith(".ape"):
+#                self.tag_info[path] = self.read_ape_tag(path)
+#            elif lower_path.endswith(".ogg"):
+#                self.tag_info[path] = self.read_ogg_tag(path)
 
     def read_mp3_tag(self, path):
         """
@@ -99,12 +99,22 @@ class MediaScanner():
         if 'USLT' in mp3_audio: media_info.lyrics = str(mp3_audio['USLT'])
 
         #There can be infinite numbers of comment tags, so we can read any
+        
         #First we escaping non printable tags
         bad_comms = "COMM:ID3v1:'eng'", "COMM:\x01:'\\x00\\x00Z'"
 
         for key in mp3_audio.keys():
-            #@TODO: WHY? need some comment!
-            if 'iTun' not in key and key not in bad_comms and 'COMM:' in key:
+            """
+            There can be special "comment" tags, created by Itunes Player. 
+            For example COMM:iTunPGAP:'eng'. It's value can be "1NUL"
+            (NUL - is the special symbol) or another symbols.
+            These tags are not useful for export and not safe for reading
+            (escape symbols could not be applied). So we are excluding them
+            from export.
+            """
+
+            if not re.search('iTun', key) and key not in bad_comms \
+            and re.match('COMM:', key):
                 media_info.comment = str(mp3_audio[key])
 
         #There can be infinite numbers of url tags, so we can read any
@@ -114,8 +124,6 @@ class MediaScanner():
 
         media_info.format = 'mp3'
         media_info.bitrate = mp3_audio.info.bitrate/1000
-        media_info.length = mp3_audio.info.length
-        media_info.sample_rate = mp3_audio.info.sample_rate
 
         return media_info
 
@@ -417,24 +425,9 @@ class MediaFileInfo(dict):
         """Maps attributes to values. Only if we are initialized."""
 
         tag_names = (
-            '_MediaFileInfo__initialised', 'tag_error', 'rec_dates', 'artist', 
-            'title', 'album', 'year', 'genre', 'track', 'comment', 'bitrate', 
-            'format', 'copyright', 'date_of_rec', 'enc_time', 'orig_rel_time', 
-            'audio_delay', 'rel_time', 'tag_time', 'encoder', 'lyricist', 
-            'lyrics', 'rec_time', 'rec_year', 'cont_gr_desc', 'track_number', 
-            'lang', 'length', 'tag_length', 'media_type', 'mood', 
-            'orig_f_name', 'orig_lyricist', 'orig_artist', 'orig_album',
-            'orig_artist2', 'ensemble', 'coverartmime', 'total_tracks',
-            'orig_rel_year', 'owner', 'accomp', 'conductor', 'bpm', 'remixer', 
-            'produced', 'publisher', 'album_artist', 'rec_dates', 
-            'radiost_name', 'radiost_owner', 'url', 'buycd_url','author_url',
-            'audio_url', 'radiost_url', 'audiosource_url', 'audiof_url', 
-            'composer', 'rating', 'f_type', 'encodedby', 'enc_by', 
-            'alb_sort_ord_key', 'perf_sort_ord_key', 'title_sort_ord_key', 
-            'isrc', 'enc_settings', 'start_key', 'iTunes_comp_flag', 
-            'set_subtitle', 'disc_number', 'label', 'labelno', 'size', 
-            'compilation', 'subt_desc', 'channels', 'sample_rate', 'bps',
-            'total_samples')
+            '_MediaFileInfo__initialised', 'tag_error', 'format', 'artist', 
+            'title', 'album', 'year', 'genre', 'track', 'comment', 
+            'disc_number', 'publisher', 'bitrate', 'url')
 
         if item not in tag_names:
             raise AttributeError(item)

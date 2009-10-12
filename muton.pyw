@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import os
 import time
 from optparse import OptionGroup, OptionParser
 
@@ -17,9 +18,10 @@ import copy_pick
 pygtk.require('2.0')
 
 def _tag_export_execute(path_to_collection, path_to_output, grouping, format):
-    time_beg = time.time()
+
     scanner = collection.MediaScanner()
     c = scanner.scan(unicode(path_to_collection))
+    time_beg = time.time()
     wr_output = outputter.ScannedInfoWriter(c)
     wr_output.write(path_to_output, grouping, format)
     print 'Tag export execution time %3.1f seconds.' % (time.time() - time_beg, )
@@ -52,7 +54,7 @@ class App:
         #Parsing the glade xml file
         self.wTree = gtk.glade.XML(self.main_xml)       
         #Dictionary for the export button action
-        dic = {"exp_click" : self.export}
+        dic = {'exp_click' : self.export, 'close_click': self.close_app}
 
         self.wTree.signal_autoconnect(dic)
         #Making close equal to destroy
@@ -63,8 +65,8 @@ class App:
     def export(self, widget):
         """By now I realized only one possibility of muton"""
         #Getting values from text fields 
-        path = self.wTree.get_widget('path_entry').get_text()
-        out_path = self.wTree.get_widget('out_path_entry').get_text()
+        path = self.wTree.get_widget('path_entry').get_uri()[8:]
+        out_path = self.wTree.get_widget('out_path_entry').get_uri()[8:]
         extension = self.wTree.get_widget('format').get_active_text().lower()
         grouping = self.wTree.get_widget('grouping').get_text().lower()
         #Executing export

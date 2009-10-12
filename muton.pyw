@@ -65,12 +65,8 @@ class App:
     def export(self, widget):
         """By now I realized only one possibility of muton"""
         #Getting values from text fields 
-        path = self.wTree.get_widget('path_entry').get_uri()
-        path = os.path.join('/', path.lstrip('file://'))
-        
-        out_path = self.wTree.get_widget('out_path_entry').get_uri()
-        out_path = os.path.join('/', out_path.lstrip('file://'))
-        
+        path = self.wTree.get_widget('path_entry').get_current_folder()
+        out_path = self.wTree.get_widget('out_path_entry').get_current_folder()
         extension = self.wTree.get_widget('format').get_active_text().lower()
         grouping = self.wTree.get_widget('grouping').get_text().lower()
         #Executing export

@@ -45,13 +45,17 @@ class ScannedInfoWriter():
         elif extension == 'xml':
             self.make_XML(grouping, out_filepath)
     
-    def make_CSV(self, grouping, output_csv):
+    def make_CSV(self, grouping, out_filepath):
+        """
+        @param grouping: like SQL group_by, may be ('album', 'song')
+        @param out_filepath: path to .csv file with collection description 
+        """
+        
+        if grouping == 'album':
+            grouping_cache = [] #List of albums for checking of uniqueness
+            self.scan_alb_size()
     
-        mark = [] #List of albums for checking of uniqueness
-
-        self.scan_alb_size()
-    
-        output_descriptor = open(output_csv, 'w')
+        output_descriptor = open(out_filepath, 'w')
         collection_description = csv.writer(output_descriptor, 
                                             delimiter=';', 
                                             quoting=csv.QUOTE_MINIMAL)
@@ -63,22 +67,22 @@ class ScannedInfoWriter():
             if 'tag_error' in tags:
                 continue
             
-            field_to_append = 0
+            field_to_append = None
             album_name = tags['album']
 
             if str(tags['bitrate']) not in self._bitr_samples:
                 tags['bitrate'] = 'VBR %s' % str(tags['bitrate'])
             
             if grouping == 'album':
-                if album_name not in mark:
-                    mark.append(album_name)
+                if album_name not in grouping_cache:
+                    grouping_cache.append(album_name)
                     field_to_append = self._alb_size_dict[album_name][0]
                 else: 
                     continue
-            else:
+            elif grouping == 'song':
                 field_to_append = float(os.path.getsize(path))/(1<<20)
                     
-            row = [tags['artist'], tags['album'], tags['year'][0:4], 
+            row = [tags['artist'], tags['album'], tags['year'], 
                    tags['genre'], tags['bitrate'], tags['format'],
                    field_to_append, tags['comment']]
             collection_description.writerow(row)

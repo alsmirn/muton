@@ -91,8 +91,8 @@ def _init_parser():
         default='xml', choices=['xml', 'csv'], 
         help='specifies format of output collection description'),
     #@TODO: using incrementation
-    auxiliary_group.add_option('--res', type='choice', dest='grouping', 
-        default='album', choices=['album', ],
+    auxiliary_group.add_option('--groupby', type='choice', dest='grouping', 
+        default='album', choices=['album', 'song'],
         help='specifies grouping of output collection description'),
     
     parser.add_option_group(auxiliary_group)

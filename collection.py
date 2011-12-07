@@ -1,12 +1,21 @@
+#!/usr/bin/env python
 import os
 import re
 import sys
 
-import mutagen
-from mutagen.mp3 import MP3
-from mutagen.flac import FLAC
-from mutagen.apev2 import APEv2
-from mutagen.oggvorbis import OggVorbis
+from collections import OrderedDict
+
+try:
+    import mutagen
+    from mutagen.mp3 import MP3
+    from mutagen.flac import FLAC
+    from mutagen.apev2 import APEv2
+    from mutagen.oggvorbis import OggVorbis
+except ImportError, e:
+    print e
+    print "Use command `pip install mutagen`."
+    sys.exit(1)
+
 
 class MediaScanner():
     """
@@ -47,8 +56,8 @@ class MediaScanner():
         #Adding to the list of the paths
         self._paths.extend(allpaths)
 
-        for subdir in subdirs_paths:
         #Applying the same scheme to the subfolders
+        for subdir in subdirs_paths:
             self.scan_fs(subdir)
 
     def read_tags(self):
@@ -61,12 +70,12 @@ class MediaScanner():
             
             if lower_path.endswith(".mp3"):
                 self.tag_info[path] = self.read_mp3_tag(path)
-#            elif lower_path.endswith(".flac"):
-#                self.tag_info[path] = self.read_flac_tag(path)
-#            elif lower_path.endswith(".ape"):
-#                self.tag_info[path] = self.read_ape_tag(path)
-#            elif lower_path.endswith(".ogg"):
-#                self.tag_info[path] = self.read_ogg_tag(path)
+            elif lower_path.endswith(".flac"):
+                self.tag_info[path] = self.read_flac_tag(path)
+            elif lower_path.endswith(".ape"):
+                self.tag_info[path] = self.read_ape_tag(path)
+            elif lower_path.endswith(".ogg"):
+                self.tag_info[path] = self.read_ogg_tag(path)
 
     def read_mp3_tag(self, path):
         """
@@ -78,15 +87,20 @@ class MediaScanner():
         try:
             mp3_audio = MP3(path) #Reading tags
         except mutagen.mp3.HeaderNotFoundError:
-            media_info.tag_error = \
-                'No MP3 tag found or %r is not a valid MP3 file' % \
-                (path.encode(sys.stdout.encoding or "utf-8"), )
+            error_message = 'No MP3 tag found or %r is not a valid MP3 file.'
+            try:
+                media_info.tag_error = error_message % \
+                                 path.encode(sys.stdout.encoding or "utf-8")
+            except UnicodeDecodeError:
+                media_info.tag_error = error_message % path
+                print path
+                
             return media_info
 
         #Initializing only those tags that are used in outputter
         media_info.artist = media_info.title = media_info.album = \
-        media_info.year = media_info.genre = media_info.track = \
-        media_info.comment = ''
+            media_info.year = media_info.genre = media_info.track = \
+            media_info.comment = ''
 
         if 'TPE1' in mp3_audio: media_info.artist = str(mp3_audio['TPE1'])
         if 'TIT2' in mp3_audio: media_info.title = str(mp3_audio['TIT2'])
@@ -157,44 +171,44 @@ class MediaScanner():
                 flac_tags[ft] = flac_audio[ft][0].encode('utf-8')
             else:
                 flac_tags[ft] = ''
-
-        media_info.artist            = flac_tags['artist']
-        media_info.title             = flac_tags['title']
-        media_info.album             = flac_tags['album']
-        media_info.year              = flac_tags['date']
-        media_info.genre             = flac_tags['genre']
-        media_info.track_number      = flac_tags['tracknumber']
-        media_info.comment           = flac_tags['comment']
-        media_info.copyright         = flac_tags['copyright']
-        media_info.lyrics            = flac_tags['lyrics']
-        media_info.disc_number       = flac_tags['discnumber']
-        media_info.labelno           = flac_tags['labelno']
-        media_info.label             = flac_tags['label']
-        media_info.encodedby         = flac_tags['encodedby']
-        media_info.encoder           = flac_tags['encoder']
-        media_info.lyricist          = flac_tags['lyricist']
-        media_info.ensemble          = flac_tags['ensemble']
-        media_info.compilation       = flac_tags['compilation']
-        media_info.orig_lyricist     = flac_tags['originallyricist']
-        media_info.orig_artist       = flac_tags['originalartist']
-        media_info.conductor         = flac_tags['conductor']
-        media_info.rating            = flac_tags['rating']
-        media_info.bpm               = flac_tags['bpm']
-        media_info.isrc              = flac_tags['isrc']
-        media_info.radiost_name      = flac_tags['radiostationname']
-        media_info.url               = flac_tags['url']
-        media_info.author_url        = flac_tags['authorurl']
-        media_info.buycd_url         = flac_tags['buycdurl']
-        media_info.audiosource_url   = flac_tags['audiosourceurl']
-        media_info.radiost_url       = flac_tags['radiostationurl']
-        media_info.audiof_url        = flac_tags['audiofileurl']
-        media_info.format = 'flac'
-        media_info.sample_rate = flac_audio.info.sample_rate
-        media_info.channels = flac_audio.info.channels
-        media_info.bps = flac_audio.info.bits_per_sample
-        media_info.total_samples = flac_audio.info.total_samples
-        media_info.length = flac_audio.info.length
-        media_info.bitrate = '' #  real bitrate is different
+        
+        media_info.artist          = flac_tags['artist']
+        media_info.title           = flac_tags['title']
+        media_info.album           = flac_tags['album']
+        media_info.year            = flac_tags['date']
+        media_info.genre           = flac_tags['genre']
+        media_info.track_number    = flac_tags['tracknumber']
+        media_info.comment         = flac_tags['comment']
+        media_info.copyright       = flac_tags['copyright']
+        media_info.lyrics          = flac_tags['lyrics']
+        media_info.disc_number     = flac_tags['discnumber']
+        media_info.labelno         = flac_tags['labelno']
+        media_info.label           = flac_tags['label']
+        media_info.encodedby       = flac_tags['encodedby']
+        media_info.encoder         = flac_tags['encoder']
+        media_info.lyricist        = flac_tags['lyricist']
+        media_info.ensemble        = flac_tags['ensemble']
+        media_info.compilation     = flac_tags['compilation']
+        media_info.orig_lyricist   = flac_tags['originallyricist']
+        media_info.orig_artist     = flac_tags['originalartist']
+        media_info.conductor       = flac_tags['conductor']
+        media_info.rating          = flac_tags['rating']
+        media_info.bpm             = flac_tags['bpm']
+        media_info.isrc            = flac_tags['isrc']
+        media_info.radiost_name    = flac_tags['radiostationname']
+        media_info.url             = flac_tags['url']
+        media_info.author_url      = flac_tags['authorurl']
+        media_info.buycd_url       = flac_tags['buycdurl']
+        media_info.audiosource_url = flac_tags['audiosourceurl']
+        media_info.radiost_url     = flac_tags['radiostationurl']
+        media_info.audiof_url      = flac_tags['audiofileurl']
+        media_info.format          = 'flac'
+        media_info.sample_rate     = flac_audio.info.sample_rate
+        media_info.channels        = flac_audio.info.channels
+        media_info.bps             = flac_audio.info.bits_per_sample
+        media_info.total_samples   = flac_audio.info.total_samples
+        media_info.length          = flac_audio.info.length
+        media_info.bitrate         = '' #  real bitrate is different
 
         return media_info
 
@@ -206,9 +220,15 @@ class MediaScanner():
         try:
             ape_audio = APEv2(path) #Reading tags
         except mutagen.apev2.APENoHeaderError:
-            media_info.tag_error = \
-                "No APE tag found or %r is not a valid APE file" % \
-                (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
+            tag_error_msg = "No APE tag found or %r is not a valid APE file"
+            
+            try:
+                media_info.tag_error = tag_error_msg % \
+                    (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
+            except UnicodeDecodeError, e:
+                # TODO! check this case
+                pass
+
             return media_info 
 
         ape_tags = [
@@ -228,38 +248,38 @@ class MediaScanner():
             else:
                 ape_tags[at] = ''
 
-        media_info.artist            = ape_tags['artist']
-        media_info.title             = ape_tags['title']
-        media_info.album             = ape_tags['album']
-        media_info.year              = ape_tags['year']
-        media_info.genre             = ape_tags['genre']
-        media_info.track             = ape_tags['track']
-        media_info.comment           = ape_tags['comment']
-        media_info.copyright         = ape_tags['copyright']
-        media_info.lyrics            = ape_tags['lyrics']
-        media_info.disc_number       = ape_tags['discnumber']
-        media_info.labelno           = ape_tags['labelno']
-        media_info.label             = ape_tags['label']
-        media_info.encodedby         = ape_tags['encodedby']
-        media_info.encoder           = ape_tags['encoder']
-        media_info.lyricist          = ape_tags['lyricist']
-        media_info.ensemble          = ape_tags['ensemble']
-        media_info.compilation       = ape_tags['compilation']
-        media_info.orig_lyricist     = ape_tags['originallyricist']
-        media_info.orig_artist       = ape_tags['originalartist']
-        media_info.conductor         = ape_tags['conductor']
-        media_info.rating            = ape_tags['rating']
-        media_info.bpm               = ape_tags['bpm']
-        media_info.isrc              = ape_tags['isrc']
-        media_info.radiost_name      = ape_tags['radiostationname']
-        media_info.url               = ape_tags['url']
-        media_info.author_url        = ape_tags['authorurl']
-        media_info.buycd_url         = ape_tags['buycdurl']
-        media_info.audiosource_url   = ape_tags['audiosourceurl']
-        media_info.radiost_url       = ape_tags['radiostationurl']
-        media_info.audiof_url        = ape_tags['audiofileurl']
-        media_info.format = 'ape'
-        media_info.bitrate = ''
+        media_info.artist          = ape_tags['artist']
+        media_info.title           = ape_tags['title']
+        media_info.album           = ape_tags['album']
+        media_info.year            = ape_tags['year']
+        media_info.genre           = ape_tags['genre']
+        media_info.track           = ape_tags['track']
+        media_info.comment         = ape_tags['comment']
+        media_info.copyright       = ape_tags['copyright']
+        media_info.lyrics          = ape_tags['lyrics']
+        media_info.disc_number     = ape_tags['discnumber']
+        media_info.labelno         = ape_tags['labelno']
+        media_info.label           = ape_tags['label']
+        media_info.encodedby       = ape_tags['encodedby']
+        media_info.encoder         = ape_tags['encoder']
+        media_info.lyricist        = ape_tags['lyricist']
+        media_info.ensemble        = ape_tags['ensemble']
+        media_info.compilation     = ape_tags['compilation']
+        media_info.orig_lyricist   = ape_tags['originallyricist']
+        media_info.orig_artist     = ape_tags['originalartist']
+        media_info.conductor       = ape_tags['conductor']
+        media_info.rating          = ape_tags['rating']
+        media_info.bpm             = ape_tags['bpm']
+        media_info.isrc            = ape_tags['isrc']
+        media_info.radiost_name    = ape_tags['radiostationname']
+        media_info.url             = ape_tags['url']
+        media_info.author_url      = ape_tags['authorurl']
+        media_info.buycd_url       = ape_tags['buycdurl']
+        media_info.audiosource_url = ape_tags['audiosourceurl']
+        media_info.radiost_url     = ape_tags['radiostationurl']
+        media_info.audiof_url      = ape_tags['audiofileurl']
+        media_info.format          = 'ape'
+        media_info.bitrate         = ''
 
         return media_info
 
@@ -295,49 +315,51 @@ class MediaScanner():
             else:
                 ogg_tags[ot] = ''
 
-        media_info.artist            = ogg_tags['artist']
-        media_info.title             = ogg_tags['title']
-        media_info.album             = ogg_tags['album']
-        media_info.year              = ogg_tags['year']
+        media_info.artist = ogg_tags['artist']
+        media_info.title  = ogg_tags['title']
+        media_info.album  = ogg_tags['album']
+        media_info.year   = ogg_tags['year']
+        
         if media_info.year == '':
             media_info.year = ogg_tags['date']
-        media_info.genre             = ogg_tags['genre']
-        media_info.track             = ogg_tags['tracknumber']
-        media_info.comment           = ogg_tags['comment']
-        media_info.album_artist      = ogg_tags['album_artist']
-        media_info.ensemble          = ogg_tags['ensemble']
-        media_info.copyright         = ogg_tags['copyright']
-        media_info.publisher         = ogg_tags['publisher']
-        media_info.lyrics            = ogg_tags['lyrics']
-        media_info.lyricist          = ogg_tags['lyricist']
-        media_info.composer          = ogg_tags['composer']
-        media_info.disc_number       = ogg_tags['discnumber']
-        media_info.label             = ogg_tags['label']
-        media_info.labelno           = ogg_tags['labelno']
-        media_info.total_tracks      = ogg_tags['totaltracks']
-        media_info.encoder           = ogg_tags['encoder']
-        media_info.encodedby         = ogg_tags['encodedby']
-        media_info.compilation       = ogg_tags['compilation']
-        media_info.orig_lyricist     = ogg_tags['originallyricist']
-        media_info.orig_artist       = ogg_tags['originalartist']
-        media_info.orig_artist2      = ogg_tags['origartist']
-        media_info.conductor         = ogg_tags['conductor']
-        media_info.rating            = ogg_tags['rating']
-        media_info.mood              = ogg_tags['mood']
-        media_info.coverartmime      = ogg_tags['coverartmime']
-        media_info.bpm               = ogg_tags['bpm']
-        media_info.isrc              = ogg_tags['isrc']
-        media_info.url               = ogg_tags['url']
-        media_info.radiost_name      = ogg_tags['radiostationname']
-        media_info.url               = ogg_tags['url']
-        media_info.author_url        = ogg_tags['authorurl']
-        media_info.buycd_url         = ogg_tags['buycdurl']
-        media_info.audiosource_url   = ogg_tags['audiosourceurl']
-        media_info.radiost_url       = ogg_tags['radiostationurl']
-        media_info.audiof_url        = ogg_tags['audiofileurl']
-        media_info.format = 'ogg'
-        media_info.bitrate = ogg_audio.info.bitrate/1000
-        media_info.length = ogg_audio.info.length
+        
+        media_info.genre           = ogg_tags['genre']
+        media_info.track           = ogg_tags['tracknumber']
+        media_info.comment         = ogg_tags['comment']
+        media_info.album_artist    = ogg_tags['album_artist']
+        media_info.ensemble        = ogg_tags['ensemble']
+        media_info.copyright       = ogg_tags['copyright']
+        media_info.publisher       = ogg_tags['publisher']
+        media_info.lyrics          = ogg_tags['lyrics']
+        media_info.lyricist        = ogg_tags['lyricist']
+        media_info.composer        = ogg_tags['composer']
+        media_info.disc_number     = ogg_tags['discnumber']
+        media_info.label           = ogg_tags['label']
+        media_info.labelno         = ogg_tags['labelno']
+        media_info.total_tracks    = ogg_tags['totaltracks']
+        media_info.encoder         = ogg_tags['encoder']
+        media_info.encodedby       = ogg_tags['encodedby']
+        media_info.compilation     = ogg_tags['compilation']
+        media_info.orig_lyricist   = ogg_tags['originallyricist']
+        media_info.orig_artist     = ogg_tags['originalartist']
+        media_info.orig_artist2    = ogg_tags['origartist']
+        media_info.conductor       = ogg_tags['conductor']
+        media_info.rating          = ogg_tags['rating']
+        media_info.mood            = ogg_tags['mood']
+        media_info.coverartmime    = ogg_tags['coverartmime']
+        media_info.bpm             = ogg_tags['bpm']
+        media_info.isrc            = ogg_tags['isrc']
+        media_info.url             = ogg_tags['url']
+        media_info.radiost_name    = ogg_tags['radiostationname']
+        media_info.url             = ogg_tags['url']
+        media_info.author_url      = ogg_tags['authorurl']
+        media_info.buycd_url       = ogg_tags['buycdurl']
+        media_info.audiosource_url = ogg_tags['audiosourceurl']
+        media_info.radiost_url     = ogg_tags['radiostationurl']
+        media_info.audiof_url      = ogg_tags['audiofileurl']
+        media_info.format          = 'ogg'
+        media_info.bitrate         = ogg_audio.info.bitrate / 1000
+        media_info.length          = ogg_audio.info.length
 
         return media_info
 
@@ -430,7 +452,9 @@ class MediaFileInfo(dict):
             'disc_number', 'publisher', 'bitrate', 'url')
 
         if item not in tag_names:
-            raise AttributeError(item)
+            #raise AttributeError(item)
+            #TODO: pass is temporary solution
+            pass
 
         if not self.__dict__.has_key('_MediaFileInfo__initialised'):
             # this test allows attributes to be set in the __init__ method
@@ -440,3 +464,26 @@ class MediaFileInfo(dict):
             dict.__setattr__(self, item, value)
         else:
             self.__setitem__(item, value)
+
+
+if __name__ == '__main__':
+
+    try:
+        path = sys.argv[1]    
+    except IndexError:
+        msg = """
+            Collection path doesn't specified.
+            Usage: python collection.py path > outfile"""
+        print(msg)
+        sys.exit(1)
+    
+    tag_info = MediaScanner().scan(path)
+
+    # order by path
+    tag_info = OrderedDict(sorted(tag_info.items(), key=lambda t: t[0]))
+
+    for vals in tag_info.values():
+        try:
+            print "%(artist)s|%(title)s" % vals
+        except KeyError, e:
+            print "|"

@@ -5,13 +5,14 @@ import os
 import re
 from distutils import file_util, dir_util
 
+
 class FileCopierBySign():
     """Makes the extraction in the media collection and copies to the specified
     folder files with the specified genre or another parameter"""
 
     _TAGS_TO_CLEAN = ('artist', 'album')
     _OBLIGATORY_TAGS = _TAGS_TO_CLEAN + ('year', )
-    
+
     _RESTR_SYMB = ('|', ':', r'\\', '/', '\?', '<', '>', '\*', '"')
     _DEPR_PUNCT = (' ', '..', '...')
 
@@ -44,14 +45,14 @@ class FileCopierBySign():
             # If all obligatory tags exist after cleaning
             if all([scanned_tags[o_tags] for o_tags in self._OBLIGATORY_TAGS]):
                 #Making path for the extraction
-                
+
                 #@TODO: automatic build fmt parameter from _OBLIGATORY_TAGS
                 #by now year would be a string instead of int
-                fmt = "%(artist)s %(year)s %(album)s" 
-                
-                out_file_path = os.path.join(output_path, 
+                fmt = "%(artist)s %(year)s %(album)s"
+
+                out_file_path = os.path.join(output_path,
                     fmt.decode('utf-8') % scanned_tags)
                 dir_util.mkpath(out_file_path)
                 #Copying files
-                file_util.copy_file(curr_f_path, out_file_path, 
+                file_util.copy_file(curr_f_path, out_file_path,
                     'update = true')

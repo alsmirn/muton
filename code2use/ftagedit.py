@@ -5,14 +5,15 @@ import mutagen
 from mutagen.flac import FLAC
 from mutagen.apev2 import APEv2
 from mutagen.oggvorbis import OggVorbis
-from mutagen.id3 import (ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TPOS, 
+from mutagen.id3 import (ID3, TIT2, TPE1, TDRC, TALB, TCON, COM, TRK, TPOS,
                          TPUB,  USLT, WXXX, APIC)
+
 
 class TagWriteManager():
 
     def __init__(self, collection):
         self.collection = collection
-        self._paths = [] # list of file paths
+        self._paths = []  # list of file paths
 
     def tag_write_man(self, path, write_mode, tag_type, input_string):
         if write_mode == 'single':
@@ -77,7 +78,7 @@ class MP3TagWriter():
         self.path = path
 
         try:
-            self.mp3_audio = ID3(self.path) #Reading tags
+            self.mp3_audio = ID3(self.path)  # Reading tags
         except (mutagen.id3.ID3NoHeaderError, mutagen.mp3.HeaderNotFoundError):
             print "No MP3 tag found or %r is not a valid MP3 file" % (self.path, )
             return
@@ -136,7 +137,7 @@ class FLACTagWriter():
 
     def flac_write_tags(self, path, tag_type, input_string):
         try:
-            flac_audio = FLAC(path) #Reading tags
+            flac_audio = FLAC(path)  # Reading tags
         except mutagen.flac.FLACNoHeaderError:
             print ("%r is not a valid FLAC file") \
              % (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
@@ -144,12 +145,13 @@ class FLACTagWriter():
         flac_audio[tag_type] = input_string
         flac_audio.save()
 
+
 class APETagWriter():
     """Writes tags to APEv2 file"""
 
     def ape_write_tags(self, path, tag_type, input_string):
         try:
-            ape_audio = APEv2(path) #Reading tags
+            ape_audio = APEv2(path)  # Reading tags
         except mutagen.apev2.APENoHeaderError:
             print ("No APE tag found or %r is not a valid APE file") % \
             (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
@@ -157,16 +159,16 @@ class APETagWriter():
         ape_audio[tag_type] = input_string
         ape_audio.save()
 
+
 class OGGTagWriter():
     """Writes tags to OGG file"""
 
     def ogg_write_tags(self, path, tag_type, input_string):
         try:
-            ogg_audio = OggVorbis(path) #Reading tags
+            ogg_audio = OggVorbis(path)  # Reading tags
         except:
             print ("No Ogg tag found or %r is not a valid OGG file") \
             % (path.encode(sys.stdout.encoding or "utf-8", "replace"), )
             return
         ogg_audio[tag_type] = input_string
         ogg_audio.save()
-

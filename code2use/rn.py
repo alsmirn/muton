@@ -1,5 +1,6 @@
 import os
 
+
 class Renamer():
     def __init__(self, collection):
         self.collection = collection
@@ -19,7 +20,7 @@ class Renamer():
         self.make_sample(path, pattern)
 
         #Renaming file
-        new_name = os.path.join(os.path.split(path)[0], 
+        new_name = os.path.join(os.path.split(path)[0],
             self.ren_sample + os.path.splitext(path)[1])
         try:
             os.rename(path, new_name)
@@ -30,26 +31,26 @@ class Renamer():
     def make_sample(self, path, pattern):
 
         key = self.collection[path]
-        
+
         restr_symbols = ('|', ':', '\\', '/', '?', '<', '>', '*', '"')
         win_depr_punct = (' ', '..', '...')
 
         tag_items = {}
         tag_items_names = ('artist', 'album', 'album', 'year', 'genre', 'title')
-        
+
         #Making safe print of track number
         track_number = str()
         track_tag_name = 'track'
-        
+
         if track_tag_name in key.keys():
             track_number = "%02d" % key[track_tag_name].split('/')[0]
-        
+
         tag_items[track_tag_name] = track_number
-        
+
         #Filling tag_items from file
         for item in tag_items_names:
             tag_items[item] = key[item]
-        
+
         #Replacing list's items by tag info
         s = pattern.split('%')
         for i in range(len(s)):

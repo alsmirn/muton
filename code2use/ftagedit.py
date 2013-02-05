@@ -172,19 +172,3 @@ class OGGTagWriter():
             return
         ogg_audio[tag_type] = input_string
         ogg_audio.save()
-     def play_file(self, song):
-         sd = open(self.f, "rb")
-         pygame.mixer.music.load(sd)
-         pygame.mixer.music.play()
-         self.create_window()
-         self.circle_num = random.randint(40,60)
-
-         self.gen_window_vars()
-         while True:
-         self.counter += 1
-         cur_pos = pygame.mixer.music.get_pos()
-
-         self.visualize(self.sampled_audio[cur_pos][1])
-         self.draw_window(self.sampled_audio[cur_pos][1])
-
-         time.sleep(0.01)

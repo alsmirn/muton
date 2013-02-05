@@ -56,6 +56,3 @@ class FileCopierBySign():
                 #Copying files
                 file_util.copy_file(curr_f_path, out_file_path,
                     'update = true')
-                #Conclusion of data on an album, year and performer.
-                
-                print ftm
